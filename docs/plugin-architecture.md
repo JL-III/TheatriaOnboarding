@@ -33,7 +33,7 @@ completion trigger.
 | 3 | `EARN` | Reach $1,000 | balance ≥ 1000 (Vault) |
 | 4 | `CLAIM` | First claim (`/claim`) | **Lands API: player is in ≥1 claim** |
 | 5 | `RANKUP` | `/rankup` | **Rankup `PlayerRankupEvent`** (live) + **LuckPerms** past-starting-rank check (on join) |
-| ★ | `DAILY` | Play ~30 min for daily reward | 30 min playtime |
+| ★ | `DAILY` | Play for the daily reward | **TheatriaSessions API: player has earned today's reward** (fallback: 30 min playtime) |
 
 ## Progress detection
 
@@ -46,7 +46,11 @@ falls back to command matching when a plugin/hook isn't available:
   non-empty). The player must actually be in a claim. During onboarding the only
   land a new player belongs to is the one their first `/claim` created.
 - `EARN` → Vault `Economy#getBalance ≥ target`.
-- `DAILY` → `Statistic.PLAY_ONE_MINUTE` crossing the configured minutes.
+- `DAILY` → **TheatriaSessions hook** (`SessionsAPI#hasEarnedDailyReward(uuid)`): the
+  player has actually earned today's reward — active (non-AFK) playtime past
+  TheatriaSessions' configured threshold, which resets daily. When TheatriaSessions
+  is unavailable, falls back to `Statistic.PLAY_ONE_MINUTE` crossing the configured
+  minutes (lifetime, AFK-inclusive — only an approximation).
 - `RTP` → `PlayerTeleportEvent`: completes on the first teleport that changes
   world or covers ≥ `rtp-min-distance` blocks — i.e. when the spawn portal flings
   them into the wild. They may keep using `/rtp` to reroll afterwards.
@@ -57,11 +61,14 @@ falls back to command matching when a plugin/hook isn't available:
   player's primary group is past the configured `rankup-starting-groups` (catches
   ranks gained while offline). Disabled unless starting groups are configured.
 
-The Essentials/Lands/Rankup/LuckPerms hooks are **reflective**: no compile-time dependency,
+The Essentials/Lands/Rankup/LuckPerms/TheatriaSessions hooks are **reflective**: no compile-time dependency,
 bound at runtime if the plugin is present, and tolerant of API version
 differences. The Rankup hook registers the event dynamically by class name with
-a reflective executor. If a hook can't bind (plugin absent, or an API mismatch —
-logged once), that task falls back to command detection so the book still works.
+a reflective executor. The TheatriaSessions hook resolves the plugin's public
+`SessionsAPI` by class name and calls `hasEarnedDailyReward(uuid)`, re-fetching the
+API instance per call (it is null while that plugin is disabled). If a hook can't
+bind (plugin absent, or an API mismatch — logged once), that task falls back to
+command/statistic detection so the book still works.
 `CLAIM`'s command fallback additionally requires `EARN` to be done, so a broke
 `/claim` can't false-complete it. No hard dependencies block startup.
 

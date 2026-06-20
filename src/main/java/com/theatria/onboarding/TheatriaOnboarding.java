@@ -4,6 +4,7 @@ import com.theatria.onboarding.hook.EssentialsHook;
 import com.theatria.onboarding.hook.LandsHook;
 import com.theatria.onboarding.hook.LuckPermsHook;
 import com.theatria.onboarding.hook.RankupHook;
+import com.theatria.onboarding.hook.SessionsHook;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -24,6 +25,7 @@ public final class TheatriaOnboarding extends JavaPlugin {
     private LandsHook landsHook;
     private RankupHook rankupHook;
     private LuckPermsHook luckPermsHook;
+    private SessionsHook sessionsHook;
 
     @Override
     public void onEnable() {
@@ -38,6 +40,7 @@ public final class TheatriaOnboarding extends JavaPlugin {
         this.rankupHook = new RankupHook(this, getLogger(),
                 player -> progress.complete(player, TaskId.RANKUP));
         this.luckPermsHook = new LuckPermsHook(this, getLogger());
+        this.sessionsHook = new SessionsHook(getLogger());
 
         StarterCommand command = new StarterCommand(this);
         PluginCommand starter = getCommand("starter");
@@ -67,7 +70,8 @@ public final class TheatriaOnboarding extends JavaPlugin {
                 + ", Essentials hook: " + essentialsHook.isAvailable()
                 + ", Lands hook: " + landsHook.isAvailable()
                 + ", Rankup hook: " + rankupHook.isAvailable()
-                + ", LuckPerms rank check: " + luckPermsHook.isAvailable() + ".");
+                + ", LuckPerms rank check: " + luckPermsHook.isAvailable()
+                + ", Sessions hook: " + sessionsHook.isAvailable() + ".");
     }
 
     @Override
@@ -117,5 +121,9 @@ public final class TheatriaOnboarding extends JavaPlugin {
 
     public LuckPermsHook luckPermsHook() {
         return luckPermsHook;
+    }
+
+    public SessionsHook sessionsHook() {
+        return sessionsHook;
     }
 }

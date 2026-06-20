@@ -155,9 +155,19 @@ public class ProgressManager {
         }
 
         if (!isComplete(uuid, TaskId.DAILY)) {
-            int minutes = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (20 * 60);
-            if (minutes >= plugin.getConfig().getInt("daily-minutes", 30)) {
-                complete(player, TaskId.DAILY);
+            if (plugin.sessionsHook().isAvailable()) {
+                // TheatriaSessions is the source of truth: it only reports earned after
+                // active (non-AFK) playtime crosses the configured threshold. We trust it
+                // and do NOT fall back to the statistic here, so idle time can't complete it.
+                if (plugin.sessionsHook().hasEarnedReward(player)) {
+                    complete(player, TaskId.DAILY);
+                }
+            } else {
+                // Fallback when TheatriaSessions is absent: approximate from vanilla playtime.
+                int minutes = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (20 * 60);
+                if (minutes >= plugin.getConfig().getInt("daily-minutes", 30)) {
+                    complete(player, TaskId.DAILY);
+                }
             }
         }
 

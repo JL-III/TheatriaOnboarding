@@ -10,9 +10,10 @@ api-version: '1.21'
 
 # All optional. Vault -> EARN balance; Essentials -> SETHOME (home set);
 # Lands -> CLAIM (land owned); Rankup -> RANKUP (live PlayerRankupEvent);
-# LuckPerms -> RANKUP (join-time "past starting rank" check). Each task falls
-# back to command detection if its plugin/hook is unavailable.
-softdepend: [Vault, Essentials, Lands, Rankup, LuckPerms]
+# LuckPerms -> RANKUP (join-time "past starting rank" check);
+# TheatriaSessions -> DAILY (player has earned today's daily reward, via SessionsAPI).
+# Each task falls back to command/statistic detection if its plugin/hook is unavailable.
+softdepend: [Vault, Essentials, Lands, Rankup, LuckPerms, TheatriaSessions]
 
 commands:
   starter:

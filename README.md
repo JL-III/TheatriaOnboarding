@@ -63,12 +63,14 @@ and commands are implemented. Detection uses real state/events where it matters:
 **SETHOME via the Essentials API** (player actually has a home), **CLAIM via the
 Lands API** (player actually owns a claim), and **RANKUP via the Rankup
 `PlayerRankupEvent`** (a live rank-up) plus a **LuckPerms** join-time check for
-ranks gained while offline, with `RTP` completing when the spawn portal sends
-them into the wild. Confirmed mechanics are wired in: Lands `/claim` (first claim
-auto-creates the land, $1,000 target from EssentialsX via Vault), and the
-mine-&-sell cobblestone/coal/copper method. The Essentials/Lands/Rankup/LuckPerms
-hooks are reflective, so the build needs no extra dependencies and degrades to
-command detection if a hook can't bind.
+ranks gained while offline, and **DAILY via the TheatriaSessions API** (the player
+has actually earned today's reward), with `RTP` completing when the spawn portal
+sends them into the wild. Confirmed mechanics are wired in: Lands `/claim` (first
+claim auto-creates the land, $1,000 target from EssentialsX via Vault), and the
+mine-&-sell cobblestone/coal/copper method. The
+Essentials/Lands/Rankup/LuckPerms/TheatriaSessions hooks are reflective, so the
+build needs no extra dependencies and degrades to command/statistic detection if a
+hook can't bind.
 
 **Not yet verified:** the build couldn't be compiled in the dev sandbox (the
 Maven repos are firewalled there). Pending values stay in `config.yml` /

@@ -4,7 +4,12 @@
 # player's balance to reach this (checked via Vault).
 earn-target: 1000.0
 
-# Minutes of playtime that complete the DAILY (daily reward) task.
+# DAILY (daily reward) task detection:
+#   Primary  -> TheatriaSessions' SessionsAPI (the player has actually earned today's
+#               reward: active, non-AFK playtime past its configured threshold, reset
+#               daily). Used automatically whenever TheatriaSessions is installed.
+#   Fallback -> when TheatriaSessions is absent, approximate from vanilla playtime:
+#               complete after this many minutes of (lifetime, AFK-inclusive) playtime.
 daily-minutes: 30
 
 # RTP completes when the player first leaves spawn — the portal teleport, or any
