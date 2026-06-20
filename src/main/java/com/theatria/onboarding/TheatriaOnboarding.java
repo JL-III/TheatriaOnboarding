@@ -2,6 +2,7 @@ package com.theatria.onboarding;
 
 import com.theatria.onboarding.hook.EssentialsHook;
 import com.theatria.onboarding.hook.LandsHook;
+import com.theatria.onboarding.hook.RankupHook;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -20,16 +21,20 @@ public final class TheatriaOnboarding extends JavaPlugin {
     private Economy economy; // null when Vault is absent
     private EssentialsHook essentialsHook;
     private LandsHook landsHook;
+    private RankupHook rankupHook;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         setupEconomy();
-        this.essentialsHook = new EssentialsHook(getLogger());
-        this.landsHook = new LandsHook(this, getLogger());
 
         this.progress = new ProgressManager(this);
         this.renderer = new BookRenderer();
+
+        this.essentialsHook = new EssentialsHook(getLogger());
+        this.landsHook = new LandsHook(this, getLogger());
+        this.rankupHook = new RankupHook(this, getLogger(),
+                player -> progress.complete(player, TaskId.RANKUP));
 
         StarterCommand command = new StarterCommand(this);
         PluginCommand starter = getCommand("starter");
@@ -57,7 +62,8 @@ public final class TheatriaOnboarding extends JavaPlugin {
         getLogger().info("TheatriaOnboarding enabled. "
                 + "Vault: " + (economy != null)
                 + ", Essentials hook: " + essentialsHook.isAvailable()
-                + ", Lands hook: " + landsHook.isAvailable() + ".");
+                + ", Lands hook: " + landsHook.isAvailable()
+                + ", Rankup hook: " + rankupHook.isAvailable() + ".");
     }
 
     @Override
@@ -99,5 +105,9 @@ public final class TheatriaOnboarding extends JavaPlugin {
 
     public LandsHook landsHook() {
         return landsHook;
+    }
+
+    public RankupHook rankupHook() {
+        return rankupHook;
     }
 }

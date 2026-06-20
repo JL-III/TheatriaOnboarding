@@ -90,7 +90,11 @@ public class OnboardingListeners implements Listener {
         // Make sure balance-driven progress (EARN) is current before we use it.
         plugin.progress().recheck(player);
 
-        check(player, message, "commands.rankup", TaskId.RANKUP);
+        // RANKUP is normally confirmed via the Rankup PlayerRankupEvent; only fall
+        // back to command detection when that hook is unavailable.
+        if (!plugin.rankupHook().isAvailable()) {
+            check(player, message, "commands.rankup", TaskId.RANKUP);
+        }
 
         // SETHOME / CLAIM are normally confirmed via the Essentials / Lands hooks
         // in recheck(); only fall back to command detection when a hook is absent.

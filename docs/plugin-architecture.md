@@ -32,7 +32,7 @@ completion trigger.
 | 2 | `SETHOME` | `/sethome` | **Essentials API: player has ≥1 home** |
 | 3 | `EARN` | Reach $1,000 | balance ≥ 1000 (Vault) |
 | 4 | `CLAIM` | First claim (`/claim`) | **Lands API: player is in ≥1 claim** |
-| 5 | `RANKUP` | `/rank up` | ran the rankup command |
+| 5 | `RANKUP` | `/rankup` | **Rankup `PlayerRankupEvent`** (actual rank-up) |
 | ★ | `DAILY` | Play ~30 min for daily reward | 30 min playtime |
 
 ## Progress detection
@@ -50,14 +50,17 @@ falls back to command matching when a plugin/hook isn't available:
 - `RTP` → `PlayerTeleportEvent`: completes on the first teleport that changes
   world or covers ≥ `rtp-min-distance` blocks — i.e. when the spawn portal flings
   them into the wild. They may keep using `/rtp` to reroll afterwards.
-- `RANKUP` → command listener (`/rank up`), since the rank plugin varies.
+- `RANKUP` → **Rankup hook**: listens for `sh.okx.rankup.events.PlayerRankupEvent`,
+  which only fires on a successful rank-up — so a `/rankup` without enough money
+  won't count.
 
-The Essentials/Lands hooks are **reflective**: no compile-time dependency, bound
-at runtime if the plugin is present, and tolerant of API version differences. If
-a hook can't bind (plugin absent, or an API mismatch — logged once), that task
-falls back to command detection so the book still works. `CLAIM`'s command
-fallback additionally requires `EARN` to be done, so a broke `/claim` can't
-false-complete it. No hard dependencies block startup.
+The Essentials/Lands/Rankup hooks are **reflective**: no compile-time dependency,
+bound at runtime if the plugin is present, and tolerant of API version
+differences. The Rankup hook registers the event dynamically by class name with
+a reflective executor. If a hook can't bind (plugin absent, or an API mismatch —
+logged once), that task falls back to command detection so the book still works.
+`CLAIM`'s command fallback additionally requires `EARN` to be done, so a broke
+`/claim` can't false-complete it. No hard dependencies block startup.
 
 Completion is re-evaluated on join, on relevant events, on a short delayed
 re-check after each command (so post-execution state like a new home is caught),

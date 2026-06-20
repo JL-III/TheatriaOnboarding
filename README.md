@@ -59,12 +59,13 @@ The jar lands in `target/TheatriaOnboarding-1.0.0.jar`; drop it in `plugins/`.
 ## Status
 
 **v1 plugin drafted.** The dynamic virtual book, progress tracking, persistence,
-and commands are implemented. Detection uses real state where it matters:
-**SETHOME via the Essentials API** (player actually has a home) and **CLAIM via
-the Lands API** (player actually owns a claim), with `RTP` completing when the
-spawn portal sends them into the wild. Confirmed mechanics are wired in: Lands
-`/claim` (first claim auto-creates the land, $1,000 target from EssentialsX via
-Vault), and the mine-&-sell cobblestone/coal/copper method. The Essentials/Lands
+and commands are implemented. Detection uses real state/events where it matters:
+**SETHOME via the Essentials API** (player actually has a home), **CLAIM via the
+Lands API** (player actually owns a claim), and **RANKUP via the Rankup
+`PlayerRankupEvent`** (an actual rank-up), with `RTP` completing when the spawn
+portal sends them into the wild. Confirmed mechanics are wired in: Lands `/claim`
+(first claim auto-creates the land, $1,000 target from EssentialsX via Vault),
+and the mine-&-sell cobblestone/coal/copper method. The Essentials/Lands/Rankup
 hooks are reflective, so the build needs no extra dependencies and degrades to
 command detection if a hook can't bind.
 
