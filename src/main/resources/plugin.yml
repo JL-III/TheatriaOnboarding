@@ -9,9 +9,10 @@ authors: [Theatria]
 api-version: '1.21'
 
 # All optional. Vault -> EARN balance; Essentials -> SETHOME (home set);
-# Lands -> CLAIM (land owned); Rankup -> RANKUP (PlayerRankupEvent). Each task
-# falls back to command detection if its plugin/hook is unavailable.
-softdepend: [Vault, Essentials, Lands, Rankup]
+# Lands -> CLAIM (land owned); Rankup -> RANKUP (live PlayerRankupEvent);
+# LuckPerms -> RANKUP (join-time "past starting rank" check). Each task falls
+# back to command detection if its plugin/hook is unavailable.
+softdepend: [Vault, Essentials, Lands, Rankup, LuckPerms]
 
 commands:
   starter:

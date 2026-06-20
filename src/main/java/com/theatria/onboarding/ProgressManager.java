@@ -172,5 +172,13 @@ public class ProgressManager {
                 && plugin.landsHook().hasClaim(player)) {
             complete(player, TaskId.CLAIM);
         }
+
+        // Retroactive rank-up detection (e.g. ranked up while offline). Live
+        // rank-ups are handled by RankupHook's event instead.
+        if (!isComplete(uuid, TaskId.RANKUP)
+                && plugin.luckPermsHook().isAvailable()
+                && plugin.luckPermsHook().hasRankedUp(player)) {
+            complete(player, TaskId.RANKUP);
+        }
     }
 }

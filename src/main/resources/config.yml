@@ -12,6 +12,14 @@ daily-minutes: 30
 # using /rtp afterwards to find a nicer spot.
 rtp-min-distance: 100.0
 
+# Join-time rank check (LuckPerms). A player whose LuckPerms primary group is NOT
+# one of these is treated as already ranked up, completing RANKUP retroactively
+# (e.g. they ranked up while this plugin was off). Set this to your first/starting
+# rank group name(s) — usually the first rank in Rankup's rankups.yml. Leave empty
+# ([]) to rely only on the live rank-up event. IMPORTANT: if your starting rank
+# group isn't "default", change this, or RANKUP may complete for everyone.
+rankup-starting-groups: [default]
+
 # Open the Starter Guide automatically the first time a player ever joins.
 auto-open-first-join: true
 

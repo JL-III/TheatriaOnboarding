@@ -32,7 +32,7 @@ completion trigger.
 | 2 | `SETHOME` | `/sethome` | **Essentials API: player has ≥1 home** |
 | 3 | `EARN` | Reach $1,000 | balance ≥ 1000 (Vault) |
 | 4 | `CLAIM` | First claim (`/claim`) | **Lands API: player is in ≥1 claim** |
-| 5 | `RANKUP` | `/rankup` | **Rankup `PlayerRankupEvent`** (actual rank-up) |
+| 5 | `RANKUP` | `/rankup` | **Rankup `PlayerRankupEvent`** (live) + **LuckPerms** past-starting-rank check (on join) |
 | ★ | `DAILY` | Play ~30 min for daily reward | 30 min playtime |
 
 ## Progress detection
@@ -50,11 +50,14 @@ falls back to command matching when a plugin/hook isn't available:
 - `RTP` → `PlayerTeleportEvent`: completes on the first teleport that changes
   world or covers ≥ `rtp-min-distance` blocks — i.e. when the spawn portal flings
   them into the wild. They may keep using `/rtp` to reroll afterwards.
-- `RANKUP` → **Rankup hook**: listens for `sh.okx.rankup.events.PlayerRankupEvent`,
-  which only fires on a successful rank-up — so a `/rankup` without enough money
-  won't count.
+- `RANKUP` → **Rankup hook** (live) listens for
+  `sh.okx.rankup.events.PlayerRankupEvent`, which only fires on a successful
+  rank-up — so a `/rankup` without enough money won't count. A **LuckPerms hook**
+  also runs on join (via `recheck`) and completes RANKUP retroactively if the
+  player's primary group is past the configured `rankup-starting-groups` (catches
+  ranks gained while offline). Disabled unless starting groups are configured.
 
-The Essentials/Lands/Rankup hooks are **reflective**: no compile-time dependency,
+The Essentials/Lands/Rankup/LuckPerms hooks are **reflective**: no compile-time dependency,
 bound at runtime if the plugin is present, and tolerant of API version
 differences. The Rankup hook registers the event dynamically by class name with
 a reflective executor. If a hook can't bind (plugin absent, or an API mismatch —
@@ -98,6 +101,9 @@ each task between its incomplete and struck-through completed form.
 - `earn-target: 1000.0` — balance needed for EARN.
 - `daily-minutes: 30` — playtime for DAILY.
 - `rtp-min-distance: 100.0` — teleport distance (or world change) that completes RTP.
+- `rankup-starting-groups: [default]` — LuckPerms groups that count as "not yet
+  ranked up"; a primary group outside this set completes RANKUP on join. Empty
+  disables the retroactive check.
 - `auto-open-first-join: true`
 - `commands:` — fallback command aliases for `sethome`, `claim`, `rankup`, and
   the `sell` EARN-fallback. `sethome`/`claim` are only used when their
