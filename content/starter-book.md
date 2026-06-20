@@ -69,12 +69,13 @@ Sell what's in your
 hand:
    /sell hand
 
-GOAL: $5,000 - the
+GOAL: $1,000 - the
 cost of your first
 claim.
 
-Fastest & safe:
-[FILL IN method]
+Mine & sell
+cobblestone, coal,
+copper.
 ```
 
 **Page 6 — Task 4: Claim your land**
@@ -85,10 +86,11 @@ Claim your land
 Stand where you want
 to build:
    /claim
-(costs $5,000)
 
-Protects your stuff
-from other players.
+Costs $1,000 and
+creates your land.
+Protects it from
+other players.
 ```
 
 **Page 7 — Task 5: Rank up**

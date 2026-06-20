@@ -52,20 +52,22 @@ This is the make-or-break step (see Friction analysis below). Structured as:
 2. **First quick win:** mine/chop a few blocks, then `/sell hand` immediately so
    the money loop *clicks* in under a minute.
 3. **Learn to value items:** `/worth` while holding something.
-4. **Hit a concrete target:** *"Earn $5,000 — the cost of your first claim.
-   Fastest safe method: [FILL IN, e.g. mine cobblestone / harvest crops]."*
+4. **Hit a concrete target:** *"Earn $1,000 — the cost of your first claim.
+   Mine and sell cobblestone, coal, and copper."*
 
 ### Stage 4 — Protect: claim your land (`/claim`)
 
-- Claims run on the **Lands** plugin. The player stands on the spot and types
-  `/claim`; it costs **$5,000**, pulled from their EssentialsX balance (Lands →
-  Vault → Essentials economy).
-- Because the claim costs money, Stage 3's earn target = **$5,000**. The two
-  steps are one continuous goal: "earn $5,000, then `/claim`."
-- **Verify:** in a default Lands setup a player usually creates a land first
-  (`/lands create <name>` or via `/lands menu`) before `/claim` works on chunks.
-  Confirm whether Theatria's `/claim` auto-handles land creation for a brand-new
-  player, or whether the book needs a "create your land first" sub-step.
+- Claims run on the **Lands** plugin. A brand-new player just types `/claim` —
+  the first `/claim` auto-creates their land and claims the chunk they're
+  standing in. `/lands create <name>` exists but is optional; we deliberately
+  teach only `/claim` to keep it simple.
+- **First-claim cost = land-creation price.** Recommended: set Lands'
+  land-creation price to **$1,000** (pulled from EssentialsX via Vault). That
+  makes the first claim a $1,000 goal — the single biggest friction reducer
+  available — which is why Stage 3's earn target is $1,000.
+- Note: additional chunk claims after the first can cost more (e.g. the $5,000
+  per-claim figure). That's fine — onboarding only needs to get them their first
+  claim, so the book stays focused on the $1,000 first claim.
 
 ### Stage 5 — Progress: rank up (`/rank up`)
 
@@ -107,18 +109,18 @@ it from an open-ended grind into a bounded, guided quest:**
    farming.)
 4. **Set a concrete dollar target** equal to (or just above) the first claim
    cost, so "done" is unambiguous.
-5. **Make $5,000 reachable in one short session.** The claim cost is fixed at
-   $5,000 (Lands), so instead of discounting the claim, tune the *earn rate* to
-   meet it: make sure the recommended method yields ~$5,000 in a reasonable
-   sit-down, and lean on the **daily reward** to cover a meaningful chunk of it
-   (e.g., a reward worth ~$1–2k turns the first claim from a slog into a
-   near-finish). If $5,000 turns out to take too long for a fresh account,
-   that's the number to revisit — or add a small first-join stipend.
+5. **Keep the first claim cheap.** Set the Lands land-creation price to
+   **$1,000** so the first `/claim` is a $1,000 goal, not a grind. Mining and
+   selling cobblestone/coal/copper should clear that in one short session, and
+   the **daily reward** can cover a big chunk of it — turning the first claim
+   into a near-finish rather than a wall. (Later chunk claims can cost more;
+   onboarding only needs the first one.)
 
 **Verdict:** Keep the step. With a starter kit + one quick win + a single named
-method + the concrete $5,000 target (plus the daily reward chipping in), it's
-the *right* amount of friction — it teaches the economy without losing people.
-Left open-ended, it's where your funnel leaks.
+method (mine & sell cobblestone/coal/copper) + a low $1,000 first-claim target
+backstopped by the daily reward, it's the *right* amount of friction — it
+teaches the economy without losing people. Left open-ended, it's where your
+funnel leaks.
 
 ---
 
@@ -126,20 +128,20 @@ Left open-ended, it's where your funnel leaks.
 
 These change the copy and the flow, so flagging them explicitly:
 
-1. ~~**Claim mechanic.**~~ ✅ Confirmed: **Lands** plugin, `/claim`, **$5,000**
-   pulled from EssentialsX balance via Vault.
-2. **Lands land-creation sub-step.** Does `/claim` work standalone for a
-   brand-new player, or do they need `/lands create` first? (See Stage 4.) If
-   the latter, the book gets one extra line.
-3. **Plugin stack.** Confirmed: Lands (`/claim`) + EssentialsX (`/sethome`,
+1. ~~**Claim mechanic.**~~ ✅ Confirmed: **Lands** `/claim`. First `/claim`
+   auto-creates the land (no `/lands create` needed); recommended first-claim
+   cost **$1,000** (land-creation price, from EssentialsX via Vault).
+2. ~~**Money method.**~~ ✅ Confirmed: mine & sell cobblestone, coal, copper.
+3. **Set the price.** Confirm the Lands land-creation price is actually set to
+   $1,000 in config, so the book's "$1,000" matches reality.
+4. **Plugin stack.** Confirmed: Lands (`/claim`) + EssentialsX (`/sethome`,
    `/home`, `/worth`, `/sell hand`, `/kit`, economy). Still to confirm: the RTP
    plugin (`/rtp`) and the rank-ladder plugin (`/rank up`). Knowing the exact
    plugins lets me write real config (book NBT/JSON, sign data, kit defs).
-4. **Values to fill in:** starter kit name + contents, the recommended
-   money-making method (the one we name in the book), rank-up cost, and the
+5. **Values to fill in:** starter kit name + contents, rank-up cost, and the
    daily-reward amount.
-5. **Book delivery:** OK to auto-give the book on first join in addition to
+6. **Book delivery:** OK to auto-give the book on first join in addition to
    `/starter`? (Strongly recommended.)
-6. **Deliverable format:** do you want (a) this design + copy, (b) actual
+7. **Deliverable format:** do you want (a) this design + copy, (b) actual
    implementable server files (book NBT/JSON, sign text, kit/permission config),
    or (c) both? That decides what I build next.

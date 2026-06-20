@@ -30,8 +30,9 @@ New players learn Theatria's actual gameplay loop, one step at a time:
 
 ## Status
 
-**v0 draft.** Flow and copy are drafted. Claim mechanic confirmed: **Lands**
-`/claim` costs **$5,000** from the player's EssentialsX balance, so the earn
-target is $5,000. Remaining `[FILL IN]` values (starter kit, recommended
-money method, rank-up cost, daily-reward amount) are pending confirmation —
-see the open questions in the design doc.
+**v0 draft.** Flow and copy are drafted and mostly filled in. The first `/claim`
+auto-creates a **Lands** land; recommended first-claim cost is **$1,000**
+(land-creation price, from EssentialsX via Vault), so the earn target is $1,000.
+Money method confirmed: mine & sell cobblestone/coal/copper. Remaining
+`[FILL IN]` values — starter kit contents, rank-up cost, daily-reward amount,
+and the RTP/rank plugins — are pending; see the open questions in the design doc.
