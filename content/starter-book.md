@@ -69,8 +69,9 @@ Sell what's in your
 hand:
    /sell hand
 
-GOAL: earn $[FILL IN]
-to claim your land.
+GOAL: $5,000 - the
+cost of your first
+claim.
 
 Fastest & safe:
 [FILL IN method]
@@ -82,12 +83,12 @@ TASK 4
 Claim your land
 
 Stand where you want
-to build, then:
+to build:
    /claim
+(costs $5,000)
 
-This protects your
-stuff from other
-players.
+Protects your stuff
+from other players.
 ```
 
 **Page 7 — Task 5: Rank up**

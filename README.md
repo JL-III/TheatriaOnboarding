@@ -30,6 +30,8 @@ New players learn Theatria's actual gameplay loop, one step at a time:
 
 ## Status
 
-**v0 draft.** Flow and copy are drafted; server-specific values (dollar amounts,
-exact kit/plugin commands, claim mechanic) are marked `[FILL IN]` pending
-confirmation. See the open questions in the design doc.
+**v0 draft.** Flow and copy are drafted. Claim mechanic confirmed: **Lands**
+`/claim` costs **$5,000** from the player's EssentialsX balance, so the earn
+target is $5,000. Remaining `[FILL IN]` values (starter kit, recommended
+money method, rank-up cost, daily-reward amount) are pending confirmation —
+see the open questions in the design doc.

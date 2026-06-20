@@ -52,16 +52,20 @@ This is the make-or-break step (see Friction analysis below). Structured as:
 2. **First quick win:** mine/chop a few blocks, then `/sell hand` immediately so
    the money loop *clicks* in under a minute.
 3. **Learn to value items:** `/worth` while holding something.
-4. **Hit a concrete target:** *"Earn $[FILL IN] — the cost of your first claim.
+4. **Hit a concrete target:** *"Earn $5,000 — the cost of your first claim.
    Fastest safe method: [FILL IN, e.g. mine cobblestone / harvest crops]."*
 
 ### Stage 4 — Protect: claim your land (`/claim`)
 
-- Stand on the spot, `/claim`, land is protected.
-- **Depends on the claim mechanic** (see open questions) — if claims cost money,
-  Stage 3's target = claim cost. If claims are playtime/claim-block based, Stage
-  3's target should instead be "enough to feel set up" and the claim is framed
-  as free.
+- Claims run on the **Lands** plugin. The player stands on the spot and types
+  `/claim`; it costs **$5,000**, pulled from their EssentialsX balance (Lands →
+  Vault → Essentials economy).
+- Because the claim costs money, Stage 3's earn target = **$5,000**. The two
+  steps are one continuous goal: "earn $5,000, then `/claim`."
+- **Verify:** in a default Lands setup a player usually creates a land first
+  (`/lands create <name>` or via `/lands menu`) before `/claim` works on chunks.
+  Confirm whether Theatria's `/claim` auto-handles land creation for a brand-new
+  player, or whether the book needs a "create your land first" sub-step.
 
 ### Stage 5 — Progress: rank up (`/rank up`)
 
@@ -103,15 +107,18 @@ it from an open-ended grind into a bounded, guided quest:**
    farming.)
 4. **Set a concrete dollar target** equal to (or just above) the first claim
    cost, so "done" is unambiguous.
-5. **Make the first claim cheap or free.** Heavily discount (or comp) the first
-   claim so the target is reachable in a single short session. The lesson is
-   "the economy works"; we don't need the first claim to be expensive to teach
-   that.
+5. **Make $5,000 reachable in one short session.** The claim cost is fixed at
+   $5,000 (Lands), so instead of discounting the claim, tune the *earn rate* to
+   meet it: make sure the recommended method yields ~$5,000 in a reasonable
+   sit-down, and lean on the **daily reward** to cover a meaningful chunk of it
+   (e.g., a reward worth ~$1–2k turns the first claim from a slog into a
+   near-finish). If $5,000 turns out to take too long for a fresh account,
+   that's the number to revisit — or add a small first-join stipend.
 
 **Verdict:** Keep the step. With a starter kit + one quick win + a single named
-method + a concrete small target, it's the *right* amount of friction — it
-teaches the economy without losing people. Left open-ended, it's where your
-funnel leaks.
+method + the concrete $5,000 target (plus the daily reward chipping in), it's
+the *right* amount of friction — it teaches the economy without losing people.
+Left open-ended, it's where your funnel leaks.
 
 ---
 
@@ -119,19 +126,20 @@ funnel leaks.
 
 These change the copy and the flow, so flagging them explicitly:
 
-1. **Claim mechanic — the big one.** Does `/claim` cost **money**, or does it
-   use **playtime / claim-blocks** (GriefPrevention-style)? You tied claiming to
-   earning money, which implies a paid system — but if it's claim-block based,
-   "earn money to claim" is the wrong framing and the money goal should target
-   rank-up / general setup instead.
-2. **Plugin stack.** Best guess from the commands: EssentialsX (`/sethome`,
-   `/home`, `/worth`, `/sell hand`, `/kit`), a land-claim plugin (`/claim`), an
-   RTP plugin (`/rtp`), and a rank ladder (`/rank up`). Confirming the exact
-   plugins lets me write real config (book JSON, sign data, kit definitions).
-3. **Values to fill in:** first-claim cost / money target, starter kit name and
-   contents, the recommended money-making method, rank-up cost.
-4. **Book delivery:** OK to auto-give the book on first join in addition to
+1. ~~**Claim mechanic.**~~ ✅ Confirmed: **Lands** plugin, `/claim`, **$5,000**
+   pulled from EssentialsX balance via Vault.
+2. **Lands land-creation sub-step.** Does `/claim` work standalone for a
+   brand-new player, or do they need `/lands create` first? (See Stage 4.) If
+   the latter, the book gets one extra line.
+3. **Plugin stack.** Confirmed: Lands (`/claim`) + EssentialsX (`/sethome`,
+   `/home`, `/worth`, `/sell hand`, `/kit`, economy). Still to confirm: the RTP
+   plugin (`/rtp`) and the rank-ladder plugin (`/rank up`). Knowing the exact
+   plugins lets me write real config (book NBT/JSON, sign data, kit defs).
+4. **Values to fill in:** starter kit name + contents, the recommended
+   money-making method (the one we name in the book), rank-up cost, and the
+   daily-reward amount.
+5. **Book delivery:** OK to auto-give the book on first join in addition to
    `/starter`? (Strongly recommended.)
-5. **Deliverable format:** do you want (a) this design + copy, (b) actual
+6. **Deliverable format:** do you want (a) this design + copy, (b) actual
    implementable server files (book NBT/JSON, sign text, kit/permission config),
    or (c) both? That decides what I build next.
