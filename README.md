@@ -2,7 +2,10 @@
 
 A redesign of the new-player onboarding experience for the Theatria Minecraft
 server. Today onboarding is just oak signs at spawn; this project replaces that
-with a guided, task-based flow built around an in-game **Starter Guide** book.
+with a guided, task-based flow built around a **virtual Starter Guide book** —
+opened with `/starter`, re-rendered from each player's live progress, with
+completed tasks struck through but still shown for reference. Delivered as a
+small custom **Paper plugin**.
 
 ## The core loop we teach
 
@@ -23,6 +26,8 @@ New players learn Theatria's actual gameplay loop, one step at a time:
 
 - [`docs/onboarding-design.md`](docs/onboarding-design.md) — the full flow,
   design principles, the friction analysis, and open questions.
+- [`docs/plugin-architecture.md`](docs/plugin-architecture.md) — how the dynamic
+  virtual book works: task model, progress detection, persistence, rendering.
 - [`content/starter-book.md`](content/starter-book.md) — page-by-page text for
   the `/starter` virtual book.
 - [`content/spawn-signs.md`](content/spawn-signs.md) — replacement text for the
