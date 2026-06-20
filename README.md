@@ -62,6 +62,8 @@ Run `make help` to list targets (`build`, `clean`, `help`).
 - `/starter` (alias `/guide`) — open the virtual Starter Guide.
 - `/starter reset [player]` — reset progress (needs `theatria.onboarding.admin`).
 - The book auto-opens on a player's first ever join (toggle in `config.yml`).
+- Task-completion chat messages are clickable (hover: "Click to view your starter
+  tasks") and run `/starter` when clicked.
 
 ## Status
 
