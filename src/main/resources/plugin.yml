@@ -4,9 +4,9 @@ main: com.theatria.onboarding.TheatriaOnboarding
 description: Guided new-player onboarding with a dynamic virtual Starter Guide book.
 authors: [Theatria]
 
-# Must be a value your server recognises. If the server rejects the plugin as
-# "legacy" or warns about api-version, set this to match (run /version in-game).
-api-version: '1.21'
+# Minecraft 26.x uses the new year-based scheme. If the server rejects this
+# value, try '26' or '26.1' instead.
+api-version: '26.1.2'
 
 # All optional. Vault -> EARN balance; Essentials -> SETHOME (home set);
 # Lands -> CLAIM (land owned); Rankup -> RANKUP (live PlayerRankupEvent);

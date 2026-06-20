@@ -21,19 +21,21 @@ Reopen it anytime:
 Turn the page  >>
 ```
 
-**Page 2 — Task 1: Find your spot**
+**Page 2 — Task 1: Set out to find a spot**
 ```
 TASK 1
-Find your spot
+Set out to find
+a spot
 
 Walk through the
-spawn portal into
-the wild.
+spawn portal to
+reach the wild.
 
-Not a great spot?
-/rtp to reroll until
-you find one you
-love.
+Not satisfied? Use
+/rtp until you find
+a spot you like,
+then continue your
+/starter tasks.
 ```
 
 **Page 3 — Task 2: Set your home**

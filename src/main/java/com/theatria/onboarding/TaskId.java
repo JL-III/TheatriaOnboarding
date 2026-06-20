@@ -8,15 +8,16 @@ package com.theatria.onboarding;
  */
 public enum TaskId {
 
-    RTP("Find your spot", new String[]{
+    RTP("Set out to find a spot", new String[]{
             "Walk through the",
-            "spawn portal into",
-            "the wild.",
+            "spawn portal to",
+            "reach the wild.",
             "",
-            "Not a great spot?",
-            "/rtp to reroll",
-            "until you find one",
-            "you love."
+            "Not satisfied? Use",
+            "/rtp until you find",
+            "a spot you like,",
+            "then continue your",
+            "/starter tasks."
     }),
 
     SETHOME("Set your home", new String[]{
