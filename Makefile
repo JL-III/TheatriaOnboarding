@@ -4,9 +4,9 @@
 #   make clean    Remove build output
 #   make help     Show available targets
 #
-# Requires Maven and a JDK matching pom.xml (java.version, default 21). The build
-# resolves paper-api / VaultAPI from the PaperMC and JitPack repos, so it needs
-# network access to those.
+# Requires Maven and JDK 25 (Minecraft 26.1.2 needs Java 25). The build resolves
+# paper-api / VaultAPI from the PaperMC and JitPack repos, so it needs network
+# access to those.
 
 MVN      ?= mvn
 MVNFLAGS ?= -B
