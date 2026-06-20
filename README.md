@@ -38,10 +38,11 @@ New players learn Theatria's actual gameplay loop, one step at a time:
 ## Building
 
 ```bash
-mvn clean package
+make build      # or: mvn clean package
 ```
 
 The jar lands in `target/TheatriaOnboarding-1.0.0.jar`; drop it in `plugins/`.
+Run `make help` to list targets (`build`, `clean`, `help`).
 
 > The build pulls `paper-api` and `VaultAPI` from the PaperMC and JitPack Maven
 > repos, so it needs network access to those. **Two settings in `pom.xml` are
