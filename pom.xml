@@ -16,8 +16,8 @@
         <!-- ====================================================================
              ADJUST THESE TWO IF THE BUILD OR PLUGIN LOAD COMPLAINS
              - paper.version : the paper-api artifact. It is versioned by the
-                               Minecraft version (NOT a server build number) --
-                               e.g. 1.21-R0.1-SNAPSHOT, 1.21.4-R0.1-SNAPSHOT. Keep
+                               Minecraft version, NOT a server build number, e.g.
+                               1.21-R0.1-SNAPSHOT or 1.21.4-R0.1-SNAPSHOT. Keep
                                it in sync with api-version in plugin.yml. If Maven
                                can't resolve it, run /version on the server and use
                                that Minecraft version's "-R0.1-SNAPSHOT" artifact.
