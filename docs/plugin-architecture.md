@@ -118,11 +118,12 @@ each task between its incomplete and struck-through completed form.
 
 ## Build target
 
-Targeting **Paper `26.1.2`** (server-reported version) on **Java 21**. Both are
-single, clearly-commented settings in `pom.xml` (`paper.version`, `java.version`)
-plus `api-version` in `plugin.yml` — adjust them if the build can't resolve the
-artifact or the server rejects the api-version. Everything else in the codebase
-is version-independent.
+Targeting **Paper `1.21`** (`paper-api:1.21-R0.1-SNAPSHOT`, matching `api-version`
+in `plugin.yml`) on **Java 21**. Both are single, clearly-commented settings in
+`pom.xml` (`paper.version`, `java.version`) plus `api-version` in `plugin.yml` —
+adjust them if the build can't resolve the artifact or the server rejects the
+api-version. Everything else in the codebase is version-independent.
 
-> Note: `26.1.2` could not be verified against the PaperMC Maven repo from the
-> dev sandbox (network-blocked), so confirm the artifact resolves when you build.
+> Note: paper-api is versioned by Minecraft version (e.g. `1.21-R0.1-SNAPSHOT`),
+> not by a server build number. Bump it to your server's Minecraft version if the
+> default doesn't match (`run /version`).

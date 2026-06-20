@@ -45,10 +45,12 @@ The jar lands in `target/TheatriaOnboarding-1.0.0.jar`; drop it in `plugins/`.
 
 > The build pulls `paper-api` and `VaultAPI` from the PaperMC and JitPack Maven
 > repos, so it needs network access to those. **Two settings in `pom.xml` are
-> marked for adjustment** — `paper.version` (the server reported `26.1.2`) and
-> `java.version` (defaulted to 21). If Maven can't resolve `paper-api`, run
-> `/version` on the server and use that version's `-R0.1-SNAPSHOT` artifact.
-> Likewise, set `api-version` in `plugin.yml` to a value the server accepts.
+> marked for adjustment** — `paper.version` (the paper-api artifact, versioned by
+> Minecraft version: defaults to `1.21-R0.1-SNAPSHOT`, matching `api-version` in
+> `plugin.yml`) and `java.version` (defaulted to 21). If Maven can't resolve
+> `paper-api`, run `/version` on the server and use that Minecraft version's
+> `-R0.1-SNAPSHOT` artifact. Likewise, set `api-version` in `plugin.yml` to a value
+> the server accepts.
 
 ## In-game
 
