@@ -94,14 +94,13 @@ each task between its incomplete and struck-through completed form.
 - per-task command aliases to watch (e.g. `rtp: [rtp, wild]`)
 - per-task hook toggles (use Lands/Essentials/rank API if present)
 
-## Build target — NEEDS CONFIRMATION
+## Build target
 
-The plugin compiles against the Paper API and must match the server's Minecraft
-version (which dictates the Java version too). Pending your answer:
+Targeting **Paper `26.1.2`** (server-reported version) on **Java 21**. Both are
+single, clearly-commented settings in `pom.xml` (`paper.version`, `java.version`)
+plus `api-version` in `plugin.yml` — adjust them if the build can't resolve the
+artifact or the server rejects the api-version. Everything else in the codebase
+is version-independent.
 
-- Paper **1.21.x** → Java **21**
-- Paper **1.20.x** → Java **17**
-- (Spigot works too; Adventure usage adjusts slightly.)
-
-Everything above is version-independent — only the build target (pom + Java
-level) depends on this.
+> Note: `26.1.2` could not be verified against the PaperMC Maven repo from the
+> dev sandbox (network-blocked), so confirm the artifact resolves when you build.

@@ -24,6 +24,8 @@ New players learn Theatria's actual gameplay loop, one step at a time:
 
 ## What's here
 
+- **The plugin** — `pom.xml` + `src/main/…`: a Paper plugin that serves the
+  dynamic `/starter` book and tracks per-player progress.
 - [`docs/onboarding-design.md`](docs/onboarding-design.md) — the full flow,
   design principles, the friction analysis, and open questions.
 - [`docs/plugin-architecture.md`](docs/plugin-architecture.md) — how the dynamic
@@ -33,11 +35,35 @@ New players learn Theatria's actual gameplay loop, one step at a time:
 - [`content/spawn-signs.md`](content/spawn-signs.md) — replacement text for the
   spawn signs / portal area.
 
+## Building
+
+```bash
+mvn clean package
+```
+
+The jar lands in `target/TheatriaOnboarding-1.0.0.jar`; drop it in `plugins/`.
+
+> The build pulls `paper-api` and `VaultAPI` from the PaperMC and JitPack Maven
+> repos, so it needs network access to those. **Two settings in `pom.xml` are
+> marked for adjustment** — `paper.version` (the server reported `26.1.2`) and
+> `java.version` (defaulted to 21). If Maven can't resolve `paper-api`, run
+> `/version` on the server and use that version's `-R0.1-SNAPSHOT` artifact.
+> Likewise, set `api-version` in `plugin.yml` to a value the server accepts.
+
+## In-game
+
+- `/starter` (alias `/guide`) — open the virtual Starter Guide.
+- `/starter reset [player]` — reset progress (needs `theatria.onboarding.admin`).
+- The book auto-opens on a player's first ever join (toggle in `config.yml`).
+
 ## Status
 
-**v0 draft.** Flow and copy are drafted and mostly filled in. The first `/claim`
-auto-creates a **Lands** land; recommended first-claim cost is **$1,000**
-(land-creation price, from EssentialsX via Vault), so the earn target is $1,000.
-Money method confirmed: mine & sell cobblestone/coal/copper. Remaining
-`[FILL IN]` values — starter kit contents, rank-up cost, daily-reward amount,
-and the RTP/rank plugins — are pending; see the open questions in the design doc.
+**v1 plugin drafted.** The dynamic virtual book, progress tracking, persistence,
+and commands are implemented. Confirmed mechanics are wired in: Lands `/claim`
+(first claim auto-creates the land, $1,000 target from EssentialsX via Vault),
+and the mine-&-sell cobblestone/coal/copper method.
+
+**Not yet verified:** the build couldn't be compiled in the dev sandbox (the
+Maven repos are firewalled there). Pending values stay in `config.yml` /
+`content/` — starter kit contents, rank-up cost, daily-reward amount, and the
+exact RTP/rank plugins. See the open questions in the design doc.

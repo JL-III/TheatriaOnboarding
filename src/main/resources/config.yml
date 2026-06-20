@@ -1,0 +1,21 @@
+# TheatriaOnboarding configuration
+
+# Money needed for the first Lands claim. Completing the EARN task requires the
+# player's balance to reach this (checked via Vault).
+earn-target: 1000.0
+
+# Minutes of playtime that complete the DAILY (daily reward) task.
+daily-minutes: 30
+
+# Open the Starter Guide automatically the first time a player ever joins.
+auto-open-first-join: true
+
+# Commands that complete each task when a player runs them. Case-insensitive;
+# multi-word entries like "rank up" match "/rank up ...".
+commands:
+  rtp: [rtp, wild]
+  sethome: [sethome, createhome]
+  claim: [claim, "lands claim"]
+  rankup: ["rank up", rankup]
+  # Used as the EARN fallback only when Vault is not installed.
+  sell: [sell, "sell hand"]

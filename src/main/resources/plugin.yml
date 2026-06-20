@@ -1,0 +1,27 @@
+name: TheatriaOnboarding
+version: '${project.version}'
+main: com.theatria.onboarding.TheatriaOnboarding
+description: Guided new-player onboarding with a dynamic virtual Starter Guide book.
+authors: [Theatria]
+
+# Must be a value your server recognises. If the server rejects the plugin as
+# "legacy" or warns about api-version, set this to match (run /version in-game).
+api-version: '1.21'
+
+# Vault is optional: used for the EARN ($1,000) task. Without it, EARN falls back
+# to watching the /sell command.
+softdepend: [Vault]
+
+commands:
+  starter:
+    description: Open your Starter Guide book.
+    usage: /starter [reset [player]]
+    aliases: [guide]
+
+permissions:
+  theatria.onboarding.use:
+    description: Open the Starter Guide.
+    default: true
+  theatria.onboarding.admin:
+    description: Reset onboarding progress.
+    default: op
