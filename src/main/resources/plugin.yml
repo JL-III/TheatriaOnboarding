@@ -8,9 +8,10 @@ authors: [Theatria]
 # "legacy" or warns about api-version, set this to match (run /version in-game).
 api-version: '1.21'
 
-# Vault is optional: used for the EARN ($1,000) task. Without it, EARN falls back
-# to watching the /sell command.
-softdepend: [Vault]
+# All optional. Vault -> EARN balance; Essentials -> SETHOME (home set);
+# Lands -> CLAIM (land owned). Each task falls back to command detection if its
+# plugin/hook is unavailable.
+softdepend: [Vault, Essentials, Lands]
 
 commands:
   starter:

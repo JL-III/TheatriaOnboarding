@@ -1,5 +1,7 @@
 package com.theatria.onboarding;
 
+import com.theatria.onboarding.hook.EssentialsHook;
+import com.theatria.onboarding.hook.LandsHook;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -16,11 +18,15 @@ public final class TheatriaOnboarding extends JavaPlugin {
     private ProgressManager progress;
     private BookRenderer renderer;
     private Economy economy; // null when Vault is absent
+    private EssentialsHook essentialsHook;
+    private LandsHook landsHook;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         setupEconomy();
+        this.essentialsHook = new EssentialsHook(getLogger());
+        this.landsHook = new LandsHook(this, getLogger());
 
         this.progress = new ProgressManager(this);
         this.renderer = new BookRenderer();
@@ -48,7 +54,10 @@ public final class TheatriaOnboarding extends JavaPlugin {
             progress.markSeen(p);
         });
 
-        getLogger().info("TheatriaOnboarding enabled" + (economy == null ? " (no Vault economy)" : "") + ".");
+        getLogger().info("TheatriaOnboarding enabled. "
+                + "Vault: " + (economy != null)
+                + ", Essentials hook: " + essentialsHook.isAvailable()
+                + ", Lands hook: " + landsHook.isAvailable() + ".");
     }
 
     @Override
@@ -82,5 +91,13 @@ public final class TheatriaOnboarding extends JavaPlugin {
 
     public Economy economy() {
         return economy;
+    }
+
+    public EssentialsHook essentialsHook() {
+        return essentialsHook;
+    }
+
+    public LandsHook landsHook() {
+        return landsHook;
     }
 }

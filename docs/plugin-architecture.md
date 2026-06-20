@@ -28,36 +28,40 @@ completion trigger.
 
 | # | id | Player goal | Completion trigger (see below) |
 |---|------|-------------|-------------------------------|
-| 1 | `RTP` | Find a spot (`/rtp`) | ran `/rtp` at least once |
-| 2 | `SETHOME` | `/sethome` | player has ≥1 home |
+| 1 | `RTP` | Leave spawn via the portal | first long-distance / cross-world teleport |
+| 2 | `SETHOME` | `/sethome` | **Essentials API: player has ≥1 home** |
 | 3 | `EARN` | Reach $1,000 | balance ≥ 1000 (Vault) |
-| 4 | `CLAIM` | First claim (`/claim`) | owns ≥1 Lands claim |
-| 5 | `RANKUP` | `/rank up` | rank above starting group |
+| 4 | `CLAIM` | First claim (`/claim`) | **Lands API: player is in ≥1 claim** |
+| 5 | `RANKUP` | `/rank up` | ran the rankup command |
 | ★ | `DAILY` | Play ~30 min for daily reward | 30 min playtime |
 
 ## Progress detection
 
-Two strategies; the plugin uses a pragmatic mix and each is configurable:
+The plugin prefers **real state checks** over "a command was typed", and only
+falls back to command matching when a plugin/hook isn't available:
 
-- **State checks (preferred where cheap/reliable).** Don't trust "command was
-  typed" — check the resulting state:
-  - `EARN` → Vault `Economy#getBalance ≥ target`.
-  - `SETHOME` → Essentials API: player has ≥1 home.
-  - `CLAIM` → Lands API: player owns ≥1 claim (and/or listen to Lands'
-    claim-created event).
-  - `RANKUP` → permissions/rank plugin: group is past the starting rank.
-- **Command listener (fallback / where there's no persistent state).**
-  `PlayerCommandPreprocessEvent` matched against configurable aliases — used for
-  `RTP` (no lasting state to check) and as a fallback for `RANKUP`.
-- **Playtime** for `DAILY` → `Statistic.PLAY_ONE_MINUTE` (ticks played) crossing
-  the configured minutes, re-checked on a light repeating task.
+- `SETHOME` → **Essentials hook** (`getUser(player).getHomes()` non-empty). The
+  player must actually have a home — typing `/sethome` alone isn't enough.
+- `CLAIM` → **Lands hook** (`LandsIntegration.getLandPlayer(uuid).getLands()`
+  non-empty). The player must actually be in a claim. During onboarding the only
+  land a new player belongs to is the one their first `/claim` created.
+- `EARN` → Vault `Economy#getBalance ≥ target`.
+- `DAILY` → `Statistic.PLAY_ONE_MINUTE` crossing the configured minutes.
+- `RTP` → `PlayerTeleportEvent`: completes on the first teleport that changes
+  world or covers ≥ `rtp-min-distance` blocks — i.e. when the spawn portal flings
+  them into the wild. They may keep using `/rtp` to reroll afterwards.
+- `RANKUP` → command listener (`/rank up`), since the rank plugin varies.
 
-Soft-depends (`Vault`, `Essentials`, `Lands`, the rank plugin) are optional: if
-a plugin is absent, that task falls back to its command-listener trigger so the
-book still works. No hard dependencies block startup.
+The Essentials/Lands hooks are **reflective**: no compile-time dependency, bound
+at runtime if the plugin is present, and tolerant of API version differences. If
+a hook can't bind (plugin absent, or an API mismatch — logged once), that task
+falls back to command detection so the book still works. `CLAIM`'s command
+fallback additionally requires `EARN` to be done, so a broke `/claim` can't
+false-complete it. No hard dependencies block startup.
 
-Completion is re-evaluated on join, on the relevant events, and on a light timer,
-then persisted — so the book is correct whenever it's opened.
+Completion is re-evaluated on join, on relevant events, on a short delayed
+re-check after each command (so post-execution state like a new home is caught),
+and on a 30-second timer — then persisted, so the book is correct whenever opened.
 
 ## Persistence
 
@@ -88,11 +92,13 @@ each task between its incomplete and struck-through completed form.
 
 ## Config (`config.yml`)
 
-- `earn-target: 1000`
-- `daily-minutes: 30`
+- `earn-target: 1000.0` — balance needed for EARN.
+- `daily-minutes: 30` — playtime for DAILY.
+- `rtp-min-distance: 100.0` — teleport distance (or world change) that completes RTP.
 - `auto-open-first-join: true`
-- per-task command aliases to watch (e.g. `rtp: [rtp, wild]`)
-- per-task hook toggles (use Lands/Essentials/rank API if present)
+- `commands:` — fallback command aliases for `sethome`, `claim`, `rankup`, and
+  the `sell` EARN-fallback. `sethome`/`claim` are only used when their
+  Essentials/Lands hook is unavailable; `rankup` always uses commands.
 
 ## Build target
 

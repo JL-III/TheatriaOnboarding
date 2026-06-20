@@ -26,12 +26,13 @@ Turn the page  >>
 TASK 1
 Find your spot
 
-Type  /rtp  to drop
-into the wild.
+Walk through the
+spawn portal into
+the wild.
 
-Don't like it?
-/rtp again until you
-find a place you
+Not a great spot?
+/rtp to reroll until
+you find one you
 love.
 ```
 

@@ -139,8 +139,10 @@ public class ProgressManager {
     }
 
     /**
-     * Re-evaluates the "state-checked" tasks (balance and playtime) for an online
-     * player. Command-driven tasks are handled by the listener instead.
+     * Re-evaluates the state-checked tasks for an online player: balance (EARN),
+     * playtime (DAILY), home set (SETHOME, via Essentials) and land claimed
+     * (CLAIM, via Lands). Tasks whose plugin hook is unavailable are left to the
+     * command-listener fallback instead.
      */
     public void recheck(Player player) {
         UUID uuid = player.getUniqueId();
@@ -157,6 +159,18 @@ public class ProgressManager {
             if (minutes >= plugin.getConfig().getInt("daily-minutes", 30)) {
                 complete(player, TaskId.DAILY);
             }
+        }
+
+        if (!isComplete(uuid, TaskId.SETHOME)
+                && plugin.essentialsHook().isAvailable()
+                && plugin.essentialsHook().hasHome(player)) {
+            complete(player, TaskId.SETHOME);
+        }
+
+        if (!isComplete(uuid, TaskId.CLAIM)
+                && plugin.landsHook().isAvailable()
+                && plugin.landsHook().hasClaim(player)) {
+            complete(player, TaskId.CLAIM);
         }
     }
 }

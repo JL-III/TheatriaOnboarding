@@ -7,13 +7,21 @@ earn-target: 1000.0
 # Minutes of playtime that complete the DAILY (daily reward) task.
 daily-minutes: 30
 
+# RTP completes when the player first leaves spawn — the portal teleport, or any
+# teleport that changes world or moves at least this many blocks. They can keep
+# using /rtp afterwards to find a nicer spot.
+rtp-min-distance: 100.0
+
 # Open the Starter Guide automatically the first time a player ever joins.
 auto-open-first-join: true
 
-# Commands that complete each task when a player runs them. Case-insensitive;
-# multi-word entries like "rank up" match "/rank up ...".
+# Task detection:
+#   SETHOME -> confirmed via the Essentials API (player actually has a home).
+#   CLAIM   -> confirmed via the Lands API (player actually owns a claim).
+# The command lists below are only used as fallbacks when those plugins/hooks
+# are unavailable. RANKUP and the EARN sell-fallback always use commands.
+# Matching is case-insensitive; multi-word entries like "rank up" match "/rank up ...".
 commands:
-  rtp: [rtp, wild]
   sethome: [sethome, createhome]
   claim: [claim, "lands claim"]
   rankup: ["rank up", rankup]
