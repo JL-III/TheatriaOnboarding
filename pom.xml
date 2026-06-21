@@ -23,6 +23,10 @@
              ==================================================================== -->
         <paper.version>26.1.2.build.69-stable</paper.version>
         <java.version>25</java.version>
+
+        <!-- TheatriaSessions API (first-party) used for the DAILY task. Bump this
+             to whatever version TheatriaSessions last published to GitHub Packages. -->
+        <theatriasessions.version>v1.0.0-alpha.6</theatriasessions.version>
     </properties>
 
     <repositories>
@@ -33,6 +37,21 @@
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <!-- First-party TheatriaSessions artifact (the SessionsAPI). GitHub Packages
+             requires authentication even to download, so add a matching <server> to
+             your ~/.m2/settings.xml:
+
+               <server>
+                 <id>github-theatriasessions</id>
+                 <username>YOUR_GITHUB_USERNAME</username>
+                 <password>A_GITHUB_TOKEN_WITH_read:packages</password>
+               </server>
+
+             In CI, set username to ${env.GITHUB_ACTOR} and password to a token. -->
+        <repository>
+            <id>github-theatriasessions</id>
+            <url>https://maven.pkg.github.com/JL-III/TheatriaSessions</url>
         </repository>
     </repositories>
 
@@ -51,6 +70,18 @@
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- First-party: the DAILY task reads TheatriaSessions' public SessionsAPI.
+             'provided' = compiled against, supplied by the TheatriaSessions plugin at
+             runtime (not bundled). Still a soft dependency: SessionsHook guards every
+             use behind a plugin-presence check and falls back to the playtime
+             statistic when TheatriaSessions is absent. -->
+        <dependency>
+            <groupId>com.playtheatria</groupId>
+            <artifactId>theatriasessions</artifactId>
+            <version>${theatriasessions.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

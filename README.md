@@ -53,6 +53,12 @@ Run `make help` to list targets (`build`, `clean`, `help`).
 > The build pulls `paper-api` and `VaultAPI` from the PaperMC and JitPack Maven
 > repos, so it needs network access to those.
 
+> It also pulls `com.playtheatria:theatriasessions` (the SessionsAPI, for the DAILY
+> task) from **GitHub Packages**, which requires authentication even to read. Add a
+> `github-theatriasessions` server (your GitHub username + a `read:packages` token)
+> to `~/.m2/settings.xml` — see the comment in `pom.xml` — and bump
+> `theatriasessions.version` to the latest TheatriaSessions has published.
+
 ## In-game
 
 - `/starter` (alias `/guide`) — open the virtual Starter Guide.
@@ -72,10 +78,10 @@ ranks gained while offline, and **DAILY via the TheatriaSessions API** (the play
 has actually earned today's reward), with `RTP` completing when the spawn portal
 sends them into the wild. Confirmed mechanics are wired in: Lands `/claim` (first
 claim auto-creates the land, $1,000 target from EssentialsX via Vault), and the
-mine-&-sell cobblestone/coal/copper method. The
-Essentials/Lands/Rankup/LuckPerms/TheatriaSessions hooks are reflective, so the
-build needs no extra dependencies and degrades to command/statistic detection if a
-hook can't bind.
+mine-&-sell cobblestone/coal/copper method. The Essentials/Lands/Rankup/LuckPerms
+hooks are reflective (no extra build deps); DAILY depends on TheatriaSessions'
+published `SessionsAPI` directly (a `provided` GitHub Packages dependency). All
+degrade to command/statistic detection if the plugin is absent.
 
 **Build:** targets Paper 26.1.2 (`paper-api` `26.1.2.build.69-stable`) on JDK 25.
 The dev sandbox can't compile it (PaperMC repo is firewalled there), so build on

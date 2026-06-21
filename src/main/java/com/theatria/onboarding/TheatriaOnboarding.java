@@ -40,7 +40,7 @@ public final class TheatriaOnboarding extends JavaPlugin {
         this.rankupHook = new RankupHook(this, getLogger(),
                 player -> progress.complete(player, TaskId.RANKUP));
         this.luckPermsHook = new LuckPermsHook(this, getLogger());
-        this.sessionsHook = new SessionsHook(getLogger());
+        this.sessionsHook = new SessionsHook();
 
         StarterCommand command = new StarterCommand(this);
         PluginCommand starter = getCommand("starter");

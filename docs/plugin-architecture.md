@@ -61,14 +61,19 @@ falls back to command matching when a plugin/hook isn't available:
   player's primary group is past the configured `rankup-starting-groups` (catches
   ranks gained while offline). Disabled unless starting groups are configured.
 
-The Essentials/Lands/Rankup/LuckPerms/TheatriaSessions hooks are **reflective**: no compile-time dependency,
-bound at runtime if the plugin is present, and tolerant of API version
-differences. The Rankup hook registers the event dynamically by class name with
-a reflective executor. The TheatriaSessions hook resolves the plugin's public
-`SessionsAPI` by class name and calls `hasEarnedDailyReward(uuid)`, re-fetching the
-API instance per call (it is null while that plugin is disabled). If a hook can't
-bind (plugin absent, or an API mismatch — logged once), that task falls back to
-command/statistic detection so the book still works.
+The Essentials/Lands/Rankup/LuckPerms hooks are **reflective**: no compile-time
+dependency, bound at runtime if the plugin is present, and tolerant of API version
+differences. The Rankup hook registers the event dynamically by class name with a
+reflective executor. If a hook can't bind (plugin absent, or an API mismatch —
+logged once), that task falls back to command detection so the book still works.
+
+TheatriaSessions is **first-party**, so DAILY instead depends on its published
+`SessionsAPI` directly — a `provided` Maven dependency
+(`com.playtheatria:theatriasessions` from GitHub Packages) — and calls
+`SessionsAPI.get().hasEarnedDailyReward(uuid)` with no reflection. It stays a soft
+dependency: the call is gated by a plugin-presence check, so when TheatriaSessions
+is absent its classes are never touched and DAILY falls back to the playtime
+statistic.
 `CLAIM`'s command fallback additionally requires `EARN` to be done, so a broke
 `/claim` can't false-complete it. No hard dependencies block startup.
 
