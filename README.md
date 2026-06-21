@@ -37,26 +37,29 @@ New players learn Theatria's actual gameplay loop, one step at a time:
 
 ## Building
 
+Requires **JDK 25** (Minecraft 26.1.2 needs Java 25) and Maven.
+
 ```bash
-mvn clean package
+make build      # or: mvn clean package
 ```
 
 The jar lands in `target/TheatriaOnboarding-1.0.0.jar`; drop it in `plugins/`.
+Run `make help` to list targets (`build`, `clean`, `help`).
+
+> Targets Paper **26.1.2** via `paper-api` `26.1.2.build.69-stable` (Paper's new
+> 2026 build-tagged Maven format). Bump `paper.version` in `pom.xml` to the
+> latest stable build for 26.1.2 if that one has been pruned.
 
 > The build pulls `paper-api` and `VaultAPI` from the PaperMC and JitPack Maven
-> repos, so it needs network access to those. **Two settings in `pom.xml` are
-> marked for adjustment** — `paper.version` (the paper-api artifact, versioned by
-> Minecraft version: defaults to `1.21-R0.1-SNAPSHOT`, matching `api-version` in
-> `plugin.yml`) and `java.version` (defaulted to 21). If Maven can't resolve
-> `paper-api`, run `/version` on the server and use that Minecraft version's
-> `-R0.1-SNAPSHOT` artifact. Likewise, set `api-version` in `plugin.yml` to a value
-> the server accepts.
+> repos, so it needs network access to those.
 
 ## In-game
 
 - `/starter` (alias `/guide`) — open the virtual Starter Guide.
 - `/starter reset [player]` — reset progress (needs `theatria.onboarding.admin`).
 - The book auto-opens on a player's first ever join (toggle in `config.yml`).
+- Task-completion chat messages are clickable (hover: "Click to view your starter
+  tasks") and run `/starter` when clicked.
 
 ## Status
 
@@ -74,7 +77,8 @@ Essentials/Lands/Rankup/LuckPerms/TheatriaSessions hooks are reflective, so the
 build needs no extra dependencies and degrades to command/statistic detection if a
 hook can't bind.
 
-**Not yet verified:** the build couldn't be compiled in the dev sandbox (the
-Maven repos are firewalled there). Pending values stay in `config.yml` /
-`content/` — starter kit contents, rank-up cost, daily-reward amount, and the
-exact RTP/rank plugins. See the open questions in the design doc.
+**Build:** targets Paper 26.1.2 (`paper-api` `26.1.2.build.69-stable`) on JDK 25.
+The dev sandbox can't compile it (PaperMC repo is firewalled there), so build on
+a machine with repo access and JDK 25. **Pending values** to set when convenient:
+starter kit contents, rank-up cost, daily-reward amount, and
+`rankup-starting-groups` (your first rank group). See the design doc.

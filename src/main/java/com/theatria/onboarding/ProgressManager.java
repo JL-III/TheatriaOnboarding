@@ -1,6 +1,8 @@
 package com.theatria.onboarding;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Sound;
 import org.bukkit.Statistic;
@@ -127,15 +129,24 @@ public class ProgressManager {
     }
 
     private void notifyComplete(Player player, TaskId task, PlayerProgress progress) {
-        player.sendMessage(Component.text("✔ Task complete: ", NamedTextColor.GREEN)
-                .append(Component.text(task.title(), NamedTextColor.WHITE)));
+        player.sendMessage(openGuide(Component.text("✔ Task complete: ", NamedTextColor.GREEN)
+                .append(Component.text(task.title(), NamedTextColor.WHITE))));
         if (progress.allComplete()) {
-            player.sendMessage(Component.text("You've finished onboarding — welcome to Theatria!",
-                    NamedTextColor.GOLD));
+            player.sendMessage(openGuide(Component.text(
+                    "You've finished onboarding — welcome to Theatria!", NamedTextColor.GOLD)));
         } else {
-            player.sendMessage(Component.text("Open /starter to see what's next.", NamedTextColor.GRAY));
+            player.sendMessage(openGuide(Component.text(
+                    "Open /starter to see what's next.", NamedTextColor.GRAY)));
         }
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.7f, 1.4f);
+    }
+
+    /** Adds a "click to view starter tasks" hover + click-to-run-/starter action. */
+    private Component openGuide(Component base) {
+        return base
+                .hoverEvent(HoverEvent.showText(Component.text("Click to view your starter tasks",
+                        NamedTextColor.YELLOW)))
+                .clickEvent(ClickEvent.runCommand("/starter"));
     }
 
     /**

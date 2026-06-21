@@ -1,29 +1,27 @@
-# Build helpers for the TheatriaOnboarding Paper plugin (Maven).
+# TheatriaOnboarding build
 #
-# No shading is needed: both dependencies (paper-api, VaultAPI) are 'provided'
-# scope -- supplied by the server at runtime -- and every plugin integration
-# (Essentials/Lands/Rankup/LuckPerms/TheatriaSessions) is reflective with no
-# compile-time dependency. `mvn package` therefore yields a complete, shippable
-# plugin jar with nothing to bundle or relocate:
+#   make build    Compile and package the plugin -> target/TheatriaOnboarding-1.0.0.jar
+#   make clean    Remove build output
+#   make help     Show available targets
 #
-#     target/TheatriaOnboarding-<version>.jar
-#
-# If a real (compile/runtime-scope) dependency is ever added, introduce the
-# maven-shade-plugin then; until that happens it would relocate nothing.
+# Requires Maven and JDK 25 (Minecraft 26.1.2 needs Java 25). The build resolves
+# paper-api / VaultAPI from the PaperMC and JitPack repos, so it needs network
+# access to those.
 
-MVN ?= mvn
+MVN      ?= mvn
+MVNFLAGS ?= -B
+JAR      := target/TheatriaOnboarding-1.0.0.jar
 
-.PHONY: build
-build:
-	$(MVN) -q clean package
+.DEFAULT_GOAL := build
+.PHONY: build clean help
 
-.PHONY: package
-package: build
+build: ## Compile and package the plugin jar
+	$(MVN) $(MVNFLAGS) clean package
+	@echo "Built $(JAR)"
 
-.PHONY: compile
-compile:
-	$(MVN) -q clean compile
+clean: ## Remove build output
+	$(MVN) $(MVNFLAGS) clean
 
-.PHONY: clean
-clean:
-	$(MVN) -q clean
+help: ## Show available targets
+	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | \
+		awk 'BEGIN{FS=":.*?## "}{printf "  make %-8s %s\n", $$1, $$2}'
