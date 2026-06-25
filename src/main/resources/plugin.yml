@@ -18,7 +18,7 @@ softdepend: [Vault, Essentials, Lands, Rankup, LuckPerms, TheatriaSessions]
 commands:
   starter:
     description: Open your Starter Guide book.
-    usage: /starter [reset [player]]
+    usage: /starter [reset|debug [player]]
     aliases: [guide]
 
 permissions:

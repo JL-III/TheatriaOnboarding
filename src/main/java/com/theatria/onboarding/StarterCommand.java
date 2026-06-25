@@ -12,8 +12,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
-/** Handles {@code /starter} (open the guide) and {@code /starter reset [player]}. */
+/**
+ * Handles {@code /starter} (open the guide), {@code /starter reset [player]}, and
+ * {@code /starter debug [player]} (a runtime snapshot for fault-finding).
+ */
 public class StarterCommand implements TabExecutor {
 
     private final TheatriaOnboarding plugin;
@@ -27,6 +31,9 @@ public class StarterCommand implements TabExecutor {
                              @NotNull String label, @NotNull String[] args) {
         if (args.length >= 1 && args[0].equalsIgnoreCase("reset")) {
             return handleReset(sender, args);
+        }
+        if (args.length >= 1 && args[0].equalsIgnoreCase("debug")) {
+            return handleDebug(sender, args);
         }
 
         if (!(sender instanceof Player player)) {
@@ -69,15 +76,72 @@ public class StarterCommand implements TabExecutor {
         return true;
     }
 
+    /**
+     * Dumps a live snapshot for a player: each task's completion state, which detection
+     * hooks are available, and the Sessions side's view of the DAILY reward. This is the
+     * fastest way to answer "why is (or isn't) DAILY completing for this player right now".
+     */
+    private boolean handleDebug(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("theatria.onboarding.admin")) {
+            sender.sendMessage(Component.text("You don't have permission to do that.", NamedTextColor.RED));
+            return true;
+        }
+
+        Player target;
+        if (args.length >= 2) {
+            target = Bukkit.getPlayerExact(args[1]);
+            if (target == null) {
+                sender.sendMessage(Component.text("Player not found (must be online): " + args[1],
+                        NamedTextColor.RED));
+                return true;
+            }
+        } else if (sender instanceof Player self) {
+            target = self;
+        } else {
+            sender.sendMessage(Component.text("Usage: /starter debug <player>", NamedTextColor.RED));
+            return true;
+        }
+
+        UUID uuid = target.getUniqueId();
+        plugin.progress().recheck(target); // refresh the snapshot before reporting
+
+        sender.sendMessage(Component.text("=== Onboarding debug: " + target.getName() + " ===",
+                NamedTextColor.AQUA));
+
+        StringBuilder tasks = new StringBuilder();
+        for (TaskId task : TaskId.values()) {
+            tasks.append(task.name())
+                    .append(plugin.progress().isComplete(uuid, task) ? " ✓  " : " ✗  ");
+        }
+        sender.sendMessage(Component.text("Tasks: " + tasks.toString().trim(), NamedTextColor.GRAY));
+
+        sender.sendMessage(Component.text("Hooks: "
+                + "Vault=" + (plugin.economy() != null)
+                + " Essentials=" + plugin.essentialsHook().isAvailable()
+                + " Lands=" + plugin.landsHook().isAvailable()
+                + " Rankup=" + plugin.rankupHook().isAvailable()
+                + " LuckPerms=" + plugin.luckPermsHook().isAvailable()
+                + " Sessions=" + plugin.sessionsHook().isAvailable(), NamedTextColor.GRAY));
+
+        sender.sendMessage(Component.text("DAILY/Sessions: " + plugin.sessionsHook().describe(target),
+                NamedTextColor.GRAY));
+        return true;
+    }
+
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
                                       @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1 && sender.hasPermission("theatria.onboarding.admin")) {
-            if ("reset".startsWith(args[0].toLowerCase())) {
-                return Collections.singletonList("reset");
+            List<String> subs = new ArrayList<>();
+            for (String sub : List.of("reset", "debug")) {
+                if (sub.startsWith(args[0].toLowerCase())) {
+                    subs.add(sub);
+                }
             }
+            return subs;
         }
-        if (args.length == 2 && args[0].equalsIgnoreCase("reset")
+        if (args.length == 2
+                && (args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase("debug"))
                 && sender.hasPermission("theatria.onboarding.admin")) {
             List<String> names = new ArrayList<>();
             for (Player p : Bukkit.getOnlinePlayers()) {

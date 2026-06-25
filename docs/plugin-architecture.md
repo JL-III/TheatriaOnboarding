@@ -105,11 +105,31 @@ each task between its incomplete and struck-through completed form.
   `theatria.onboarding.use` (default: true).
 - `/starter reset [player]` — reset progress (admin). Perm
   `theatria.onboarding.admin` (default: op).
+- `/starter debug [player]` — print a runtime snapshot for fault-finding (admin):
+  each task's completion state, which detection hooks are available, and the
+  Sessions side's view of DAILY (active seconds vs threshold, met-threshold,
+  earned). Defaults to the sender when no player is given.
 - **Auto-open on first join** (configurable): the first time a player ever
   joins, open the book automatically.
 
+## Observability
+
+For diagnosing why a task does or doesn't complete at runtime:
+
+- **Always on:** the enable line logs which hooks bound; each task completion logs
+  `[onboarding] <player> completed <TASK> (via <source>)` at INFO, so the path is
+  in the record (e.g. `DAILY ... (via SessionsAPI)` vs `(via playtime statistic)`).
+- **`debug: true`** (config) adds per-recheck DAILY decisions — the SessionsAPI's
+  answer plus active-seconds/threshold. Chatty (recheck runs every 30s per online
+  player), so turn it on to investigate, then off.
+- **On demand:** `/starter debug [player]` collapses all of the above into one
+  snapshot without touching the log level.
+- On the Sessions side, `SessionsAPI` logs each `hasEarnedDailyReward` query under
+  TheatriaSessions' own `debug: true`.
+
 ## Config (`config.yml`)
 
+- `debug: false` — verbose per-recheck DAILY decision logging to the console.
 - `earn-target: 1000.0` — balance needed for EARN.
 - `daily-minutes: 30` — playtime for DAILY.
 - `rtp-min-distance: 100.0` — teleport distance (or world change) that completes RTP.

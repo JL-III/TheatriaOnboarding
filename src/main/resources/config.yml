@@ -1,5 +1,12 @@
 # TheatriaOnboarding configuration
 
+# Verbose debug logging to the server console for task detection — hook
+# availability at startup, and per-recheck DAILY decisions (the SessionsAPI's
+# answer plus active-seconds/threshold). Task completions are always logged at
+# INFO regardless. Turn this on to diagnose why a task is or isn't completing,
+# then turn it back off (recheck runs every 30s per online player, so it is chatty).
+debug: false
+
 # Money needed for the first Lands claim. Completing the EARN task requires the
 # player's balance to reach this (checked via Vault).
 earn-target: 1000.0

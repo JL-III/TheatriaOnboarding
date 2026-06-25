@@ -74,7 +74,7 @@ public class OnboardingListeners implements Listener {
                 || !from.getWorld().equals(to.getWorld())
                 || from.distanceSquared(to) >= minDistance * minDistance;
         if (leftSpawn) {
-            plugin.progress().complete(player, TaskId.RTP);
+            plugin.progress().complete(player, TaskId.RTP, "teleport");
         }
     }
 
@@ -131,7 +131,7 @@ public class OnboardingListeners implements Listener {
             if (message.equals(alias) || message.startsWith(alias + " ")) {
                 // Run next tick so the underlying command resolves first.
                 plugin.getServer().getScheduler().runTask(plugin,
-                        () -> plugin.progress().complete(player, task));
+                        () -> plugin.progress().complete(player, task, "command"));
                 return;
             }
         }

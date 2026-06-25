@@ -1,8 +1,11 @@
 package com.theatria.onboarding.hook;
 
 import com.playtheatria.sessions.api.SessionsAPI;
+import com.theatria.onboarding.TheatriaOnboarding;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 /**
  * Hook into TheatriaSessions, the authoritative source for the daily playtime
@@ -22,10 +25,15 @@ import org.bukkit.entity.Player;
  */
 public final class SessionsHook {
 
+    private final TheatriaOnboarding plugin;
     private final boolean present;
+    private boolean warnedNullApi;
 
-    public SessionsHook() {
+    public SessionsHook(TheatriaOnboarding plugin) {
+        this.plugin = plugin;
         this.present = Bukkit.getPluginManager().getPlugin("TheatriaSessions") != null;
+        plugin.debug("SessionsHook: TheatriaSessions " + (present ? "present" : "absent")
+                + " — DAILY uses " + (present ? "the SessionsAPI" : "the playtime statistic"));
     }
 
     /** True when TheatriaSessions is installed. Gate all {@link #hasEarnedReward} calls on this. */
@@ -36,13 +44,50 @@ public final class SessionsHook {
     /**
      * True if TheatriaSessions reports the player has earned today's daily reward.
      * Only call when {@link #isAvailable()}. {@code SessionsAPI.get()} is null while
-     * that plugin is mid-(re)load, in which case this returns false.
+     * that plugin is mid-(re)load, in which case this returns false (and warns once).
      */
     public boolean hasEarnedReward(Player player) {
         if (!present) {
             return false;
         }
         SessionsAPI api = SessionsAPI.get();
-        return api != null && api.hasEarnedDailyReward(player.getUniqueId());
+        if (api == null) {
+            if (!warnedNullApi) {
+                warnedNullApi = true;
+                plugin.getLogger().warning("TheatriaSessions is installed but SessionsAPI.get() "
+                        + "returned null (plugin disabled or mid-reload?); DAILY can't be confirmed "
+                        + "until it is back. Falling through as not-earned for now.");
+            }
+            return false;
+        }
+        boolean earned = api.hasEarnedDailyReward(player.getUniqueId());
+        if (plugin.isDebug()) {
+            UUID id = player.getUniqueId();
+            plugin.debug("SessionsHook: " + player.getName() + " earned=" + earned
+                    + " [" + api.getSessionSeconds(id) + "/" + api.getThresholdSeconds()
+                    + "s active, metThreshold=" + api.hasMetThreshold(id)
+                    + ", hasSession=" + api.hasSession(id) + "]");
+        }
+        return earned;
+    }
+
+    /**
+     * A one-line, human-readable snapshot of the Sessions side for the {@code /starter
+     * debug} dump. Keeps all {@link SessionsAPI} access behind the presence guard so it
+     * is safe to call even when TheatriaSessions is absent.
+     */
+    public String describe(Player player) {
+        if (!present) {
+            return "TheatriaSessions absent — DAILY uses the playtime statistic";
+        }
+        SessionsAPI api = SessionsAPI.get();
+        if (api == null) {
+            return "TheatriaSessions present but SessionsAPI unavailable (disabled/mid-reload?)";
+        }
+        UUID id = player.getUniqueId();
+        return String.format(
+                "session=%d/%ds active, metThreshold=%b, earnedReward=%b, hasSession=%b",
+                api.getSessionSeconds(id), api.getThresholdSeconds(),
+                api.hasMetThreshold(id), api.hasEarnedDailyReward(id), api.hasSession(id));
     }
 }

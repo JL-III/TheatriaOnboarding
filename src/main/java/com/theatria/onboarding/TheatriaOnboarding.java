@@ -26,10 +26,12 @@ public final class TheatriaOnboarding extends JavaPlugin {
     private RankupHook rankupHook;
     private LuckPermsHook luckPermsHook;
     private SessionsHook sessionsHook;
+    private boolean debug;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        this.debug = getConfig().getBoolean("debug", false);
         setupEconomy();
 
         this.progress = new ProgressManager(this);
@@ -38,9 +40,9 @@ public final class TheatriaOnboarding extends JavaPlugin {
         this.essentialsHook = new EssentialsHook(getLogger());
         this.landsHook = new LandsHook(this, getLogger());
         this.rankupHook = new RankupHook(this, getLogger(),
-                player -> progress.complete(player, TaskId.RANKUP));
+                player -> progress.complete(player, TaskId.RANKUP, "Rankup event"));
         this.luckPermsHook = new LuckPermsHook(this, getLogger());
-        this.sessionsHook = new SessionsHook();
+        this.sessionsHook = new SessionsHook(this);
 
         StarterCommand command = new StarterCommand(this);
         PluginCommand starter = getCommand("starter");
@@ -71,7 +73,8 @@ public final class TheatriaOnboarding extends JavaPlugin {
                 + ", Lands hook: " + landsHook.isAvailable()
                 + ", Rankup hook: " + rankupHook.isAvailable()
                 + ", LuckPerms rank check: " + luckPermsHook.isAvailable()
-                + ", Sessions hook: " + sessionsHook.isAvailable() + ".");
+                + ", Sessions hook: " + sessionsHook.isAvailable()
+                + ", debug: " + debug + ".");
     }
 
     @Override
@@ -125,5 +128,17 @@ public final class TheatriaOnboarding extends JavaPlugin {
 
     public SessionsHook sessionsHook() {
         return sessionsHook;
+    }
+
+    /** Whether verbose debug logging is enabled (config.yml {@code debug}). */
+    public boolean isDebug() {
+        return debug;
+    }
+
+    /** Logs to the server console at INFO, but only when {@code debug} is enabled. */
+    public void debug(String msg) {
+        if (debug) {
+            getLogger().info("[debug] " + msg);
+        }
     }
 }
