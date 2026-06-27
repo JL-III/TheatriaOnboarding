@@ -61,7 +61,9 @@ Run `make help` to list targets (`build`, `clean`, `help`).
 
 ## In-game
 
-- `/starter` (alias `/guide`) — open the virtual Starter Guide.
+- `/starter` (aliases `/guide`, `/tutorial`) — open the virtual Starter Guide.
+- A clickable "open your Starter Guide" reminder is sent on join until onboarding
+  is finished (toggle `join-reminder` in `config.yml`; skipped for alts).
 - `/starter reset [player]` — reset progress (needs `theatria.onboarding.admin`).
 - `/starter debug [player]` — runtime snapshot (admin): per-task state, available
   hooks, and the Sessions view of DAILY. Set `debug: true` in `config.yml` for

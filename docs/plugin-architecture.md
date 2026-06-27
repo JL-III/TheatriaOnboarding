@@ -101,7 +101,7 @@ each task between its incomplete and struck-through completed form.
 
 ## Commands & permissions
 
-- `/starter` (alias `/guide`) — open the virtual book. Perm
+- `/starter` (aliases `/guide`, `/tutorial`) — open the virtual book. Perm
   `theatria.onboarding.use` (default: true).
 - `/starter reset [player]` — reset progress (admin). Perm
   `theatria.onboarding.admin` (default: op).
@@ -111,6 +111,9 @@ each task between its incomplete and struck-through completed form.
   earned). Defaults to the sender when no player is given.
 - **Auto-open on first join** (configurable): the first time a player ever
   joins, open the book automatically.
+- **Join reminder** (`join-reminder`, default true): a clickable "open your
+  Starter Guide" line sent on each join until onboarding is complete; gated on
+  `theatria.onboarding.use` (so alts get none).
 
 ## Observability
 
@@ -137,6 +140,7 @@ For diagnosing why a task does or doesn't complete at runtime:
   ranked up"; a primary group outside this set completes RANKUP on join. Empty
   disables the retroactive check.
 - `auto-open-first-join: true`
+- `join-reminder: true` — clickable "open /starter" nudge on join until done.
 - `commands:` — fallback command aliases for `sethome`, `claim`, `rankup`, and
   the `sell` EARN-fallback. `sethome`/`claim` are only used when their
   Essentials/Lands hook is unavailable; `rankup` always uses commands.

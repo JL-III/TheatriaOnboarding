@@ -19,7 +19,7 @@ commands:
   starter:
     description: Open your Starter Guide book.
     usage: /starter [reset|debug [player]]
-    aliases: [guide]
+    aliases: [guide, tutorial]
 
 permissions:
   theatria.onboarding.use:

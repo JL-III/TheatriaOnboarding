@@ -1,5 +1,10 @@
 package com.theatria.onboarding;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -54,6 +59,34 @@ public class OnboardingListeners implements Listener {
                 }
             }, 40L);
         }
+
+        // Clickable reminder to open the guide — shown on each join (after the MOTD)
+        // until the player finishes onboarding. Gated on the permission (so alts get
+        // nothing) and toggleable via config.
+        if (plugin.getConfig().getBoolean("join-reminder", true)
+                && player.hasPermission("theatria.onboarding.use")
+                && !plugin.progress().get(player.getUniqueId()).allComplete()) {
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+                if (player.isOnline()
+                        && !plugin.progress().get(player.getUniqueId()).allComplete()) {
+                    player.sendMessage(starterReminder());
+                }
+            }, 60L);
+        }
+    }
+
+    /** A clickable one-line nudge to open the Starter Guide (runs /starter on click). */
+    private Component starterReminder() {
+        return Component.text()
+                .append(Component.text("» ", NamedTextColor.DARK_GREEN))
+                .append(Component.text("New to Theatria? Open your ", NamedTextColor.YELLOW))
+                .append(Component.text("Starter Guide", NamedTextColor.GOLD, TextDecoration.BOLD))
+                .append(Component.text(": ", NamedTextColor.YELLOW))
+                .append(Component.text("/starter", NamedTextColor.AQUA, TextDecoration.BOLD))
+                .hoverEvent(HoverEvent.showText(
+                        Component.text("Click to open your Starter Guide", NamedTextColor.YELLOW)))
+                .clickEvent(ClickEvent.runCommand("/starter"))
+                .build();
     }
 
     @EventHandler
