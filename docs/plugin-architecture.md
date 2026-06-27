@@ -101,7 +101,7 @@ each task between its incomplete and struck-through completed form.
 
 ## Commands & permissions
 
-- `/tutorial` (aliases `/guide`, `/tutorial`) — open the virtual book. Perm
+- `/tutorial` (alias `/guide`) — open the virtual book. Perm
   `theatria.onboarding.use` (default: true).
 - `/tutorial reset [player]` — reset progress (admin). Perm
   `theatria.onboarding.admin` (default: op).

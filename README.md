@@ -61,7 +61,7 @@ Run `make help` to list targets (`build`, `clean`, `help`).
 
 ## In-game
 
-- `/tutorial` (aliases `/guide`, `/starter`) — open the virtual Tutorial Guide.
+- `/tutorial` (alias `/guide`) — open the virtual Tutorial Guide.
 - A clickable "open your Tutorial Guide" reminder is sent on join until onboarding
   is finished (toggle `join-reminder` in `config.yml`; skipped for alts).
 - `/tutorial reset [player]` — reset progress (needs `theatria.onboarding.admin`).
