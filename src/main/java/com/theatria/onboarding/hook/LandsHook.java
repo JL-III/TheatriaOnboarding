@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 /**
  * Reflective hook into the Lands plugin so we can confirm a player has actually
- * claimed land (rather than merely having typed {@code /claim}). Reflection
+ * claimed land (rather than merely having typed {@code /lands create}). Reflection
  * keeps the plugin free of a compile-time Lands dependency and tolerant of API
  * version changes; on any failure it reports unavailable and the caller falls
  * back to command detection.
@@ -43,7 +43,7 @@ public final class LandsHook {
             this.getLandPlayer.setAccessible(true);
             this.bound = true;
         } catch (Throwable t) {
-            logger.warning("Lands present but API hook failed to bind; using command detection for /claim. " + t);
+            logger.warning("Lands present but API hook failed to bind; using command detection for /lands create. " + t);
         }
     }
 
@@ -53,7 +53,7 @@ public final class LandsHook {
 
     /**
      * True if the player belongs to at least one Lands claim. During onboarding
-     * the only land a new player is part of is one they created via /claim, so a
+     * the only land a new player is part of is one they created via /lands create, so a
      * non-empty result reliably means "they have claimed".
      */
     public boolean hasClaim(Player player) {
@@ -78,7 +78,7 @@ public final class LandsHook {
     private void warnOnce(Throwable t) {
         if (!warned) {
             warned = true;
-            logger.warning("Lands hook call failed; using command detection for /claim instead. " + t);
+            logger.warning("Lands hook call failed; using command detection for /lands create instead. " + t);
         }
     }
 }

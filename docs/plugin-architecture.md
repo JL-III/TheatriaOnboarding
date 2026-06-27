@@ -31,7 +31,7 @@ completion trigger.
 | 1 | `RTP` | Leave spawn via the portal | first long-distance / cross-world teleport |
 | 2 | `SETHOME` | `/sethome` | **Essentials API: player has ≥1 home** |
 | 3 | `EARN` | Reach $1,000 | balance ≥ 1000 (Vault) |
-| 4 | `CLAIM` | First claim (`/claim`) | **Lands API: player is in ≥1 claim** |
+| 4 | `CLAIM` | First land (`/lands create`) | **Lands API: player is in ≥1 claim** |
 | 5 | `RANKUP` | `/rankup` | **Rankup `PlayerRankupEvent`** (live) + **LuckPerms** past-starting-rank check (on join) |
 | ★ | `DAILY` | Play for the daily reward | **TheatriaSessions API: player has earned today's reward** (fallback: 30 min playtime) |
 
@@ -44,7 +44,7 @@ falls back to command matching when a plugin/hook isn't available:
   player must actually have a home — typing `/sethome` alone isn't enough.
 - `CLAIM` → **Lands hook** (`LandsIntegration.getLandPlayer(uuid).getLands()`
   non-empty). The player must actually be in a claim. During onboarding the only
-  land a new player belongs to is the one their first `/claim` created.
+  land a new player belongs to is the one their first `/lands create` made.
 - `EARN` → Vault `Economy#getBalance ≥ target`.
 - `DAILY` → **TheatriaSessions hook** (`SessionsAPI#hasEarnedDailyReward(uuid)`): the
   player has actually earned today's reward — active (non-AFK) playtime past
@@ -75,7 +75,7 @@ dependency: the call is gated by a plugin-presence check, so when TheatriaSessio
 is absent its classes are never touched and DAILY falls back to the playtime
 statistic.
 `CLAIM`'s command fallback additionally requires `EARN` to be done, so a broke
-`/claim` can't false-complete it. No hard dependencies block startup.
+`/lands create` can't false-complete it. No hard dependencies block startup.
 
 Completion is re-evaluated on join, on relevant events, on a short delayed
 re-check after each command (so post-execution state like a new home is caught),

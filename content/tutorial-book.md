@@ -88,7 +88,8 @@ Claim your land
 
 Stand where you want
 to build:
-   /claim
+   /lands create
+   <name>
 
 Costs $1,000 and
 creates your land.

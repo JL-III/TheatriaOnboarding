@@ -141,8 +141,8 @@ public class OnboardingListeners implements Listener {
         }
         if (!plugin.landsHook().isAvailable()
                 && plugin.progress().isComplete(player.getUniqueId(), TaskId.EARN)) {
-            // Without the Lands hook, only credit /claim once they've hit the money
-            // target — a bare /claim without funds would otherwise false-complete it.
+            // Without the Lands hook, only credit /lands create once they've hit the
+            // money target — a land command without funds would otherwise false-complete it.
             check(player, message, "commands.claim", TaskId.CLAIM);
         }
 

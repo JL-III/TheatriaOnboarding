@@ -18,7 +18,7 @@ New players learn Theatria's actual gameplay loop, one step at a time:
 | 1. Explore | Find a spot you like | `/rtp` |
 | 2. Settle | Make it your home | `/sethome`, `/home` |
 | 3. Earn | Gather & sell to build a balance | `/kit welcome`, `/worth`, `/sell hand` |
-| 4. Protect | Claim your land | `/claim` |
+| 4. Protect | Claim your land | `/lands create` |
 | 5. Progress | Rank up for perks | `/rank up` |
 | Bonus | Daily reward for playtime | play ~30 min |
 
@@ -81,8 +81,8 @@ Lands API** (player actually owns a claim), and **RANKUP via the Rankup
 `PlayerRankupEvent`** (a live rank-up) plus a **LuckPerms** join-time check for
 ranks gained while offline, and **DAILY via the TheatriaSessions API** (the player
 has actually earned today's reward), with `RTP` completing when the spawn portal
-sends them into the wild. Confirmed mechanics are wired in: Lands `/claim` (first
-claim auto-creates the land, $1,000 target from EssentialsX via Vault), and the
+sends them into the wild. Confirmed mechanics are wired in: Lands `/lands create`
+(creates the land, $1,000 target from EssentialsX via Vault), and the
 mine-&-sell cobblestone/coal/copper method. The Essentials/Lands/Rankup/LuckPerms
 hooks are reflective (no extra build deps); DAILY depends on TheatriaSessions'
 published `SessionsAPI` directly (a `provided` GitHub Packages dependency). All

@@ -55,12 +55,14 @@ This is the make-or-break step (see Friction analysis below). Structured as:
 4. **Hit a concrete target:** *"Earn $1,000 — the cost of your first claim.
    Mine and sell cobblestone, coal, and copper."*
 
-### Stage 4 — Protect: claim your land (`/claim`)
+### Stage 4 — Protect: claim your land (`/lands create`)
 
-- Claims run on the **Lands** plugin. A brand-new player just types `/claim` —
-  the first `/claim` auto-creates their land and claims the chunk they're
-  standing in. `/lands create <name>` exists but is optional; we deliberately
-  teach only `/claim` to keep it simple.
+- Claims run on the **Lands** plugin. We teach **`/lands create <name>`**: it's
+  the more intuitive command (name your land; it claims the chunk you're standing
+  in), and unlike `/claim` it still works when the player is already a member of
+  another land — so a friend trusting them in first can't strand them on this step.
+  (A bare `/claim` auto-creates a first land too, but fails once you belong to any
+  land.) Detection is unchanged either way: the Lands API reports land membership.
 - **First-claim cost = land-creation price.** Recommended: set Lands'
   land-creation price to **$1,000** (pulled from EssentialsX via Vault). That
   makes the first claim a $1,000 goal — the single biggest friction reducer
@@ -110,7 +112,7 @@ it from an open-ended grind into a bounded, guided quest:**
 4. **Set a concrete dollar target** equal to (or just above) the first claim
    cost, so "done" is unambiguous.
 5. **Keep the first claim cheap.** Set the Lands land-creation price to
-   **$1,000** so the first `/claim` is a $1,000 goal, not a grind. Mining and
+   **$1,000** so the first `/lands create` is a $1,000 goal, not a grind. Mining and
    selling cobblestone/coal/copper should clear that in one short session, and
    the **daily reward** can cover a big chunk of it — turning the first claim
    into a near-finish rather than a wall. (Later chunk claims can cost more;
@@ -128,13 +130,14 @@ funnel leaks.
 
 These change the copy and the flow, so flagging them explicitly:
 
-1. ~~**Claim mechanic.**~~ ✅ Confirmed: **Lands** `/claim`. First `/claim`
-   auto-creates the land (no `/lands create` needed); recommended first-claim
-   cost **$1,000** (land-creation price, from EssentialsX via Vault).
+1. ~~**Claim mechanic.**~~ ✅ Confirmed: **Lands** `/lands create <name>` (taught
+   over `/claim` — more intuitive and works even when already in another land);
+   recommended first-claim cost **$1,000** (land-creation price, from EssentialsX
+   via Vault).
 2. ~~**Money method.**~~ ✅ Confirmed: mine & sell cobblestone, coal, copper.
 3. **Set the price.** Confirm the Lands land-creation price is actually set to
    $1,000 in config, so the book's "$1,000" matches reality.
-4. **Plugin stack.** Confirmed: Lands (`/claim`) + EssentialsX (`/sethome`,
+4. **Plugin stack.** Confirmed: Lands (`/lands create`) + EssentialsX (`/sethome`,
    `/home`, `/worth`, `/sell hand`, `/kit`, economy). Still to confirm: the RTP
    plugin (`/rtp`) and the rank-ladder plugin (`/rank up`). Knowing the exact
    plugins lets me write real config (book NBT/JSON, sign data, kit defs).

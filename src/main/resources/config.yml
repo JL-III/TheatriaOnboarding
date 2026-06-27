@@ -49,7 +49,7 @@ join-reminder: true
 # Matching is case-insensitive; multi-word entries like "rank up" match "/rank up ...".
 commands:
   sethome: [sethome, createhome]
-  claim: [claim, "lands claim"]
+  claim: ["lands create", "lands claim", claim]
   rankup: [rankup, "rank up"]
   # Used as the EARN fallback only when Vault is not installed.
   sell: [sell, "sell hand"]
