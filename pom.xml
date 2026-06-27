@@ -88,6 +88,17 @@
             <version>v1.0.0-alpha.6</version>
         </dependency>
 
+        <!-- LuckPerms API (third-party, published to Maven Central). 'provided':
+             supplied by the LuckPerms plugin at runtime. Used only by LuckPermsHook,
+             whose types are touched only after a plugin-presence check, so they never
+             resolve when LuckPerms is absent. -->
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.4</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Lands API (third-party, published). 'provided': supplied by the Lands
              plugin at runtime. Used only by LandsCreateListener, which is registered
              ONLY when Lands is installed (see onEnable), so these classes never have
