@@ -28,7 +28,7 @@
              listener. Published as com.incredibleplugins:lands-api on Lands' own
              Maven repo (see <repositories>). Set this to match YOUR server's Lands
              version (https://wiki.incredibleplugins.com). -->
-        <lands.version>7.25.16</lands.version>
+        <lands.version>7.25.14</lands.version>
     </properties>
 
     <repositories>
@@ -46,7 +46,7 @@
         </repository>
         <repository>
             <id>incredibleplugins</id>
-            <url>https://repo.incredibleplugins.com/repository/maven-public/</url>
+            <url>https://repo.incredibleplugins.com/repository/releases/</url>
         </repository>
         <!-- First-party TheatriaSessions artifact (the SessionsAPI). GitHub Packages
              requires authentication even to download, so add a matching <server> to
