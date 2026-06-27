@@ -15,7 +15,7 @@ them invested before they have a chance to bounce.
 3. **Bounded goals, never open-ended.** "Go make money" is replaced with "earn
    $X by doing Y." A new player should always know *exactly* what done looks
    like.
-4. **Don't rely on signs alone.** Most players skim signs. The Starter Guide
+4. **Don't rely on signs alone.** Most players skim signs. The Tutorial Guide
    book is the source of truth; signs and the portal just funnel players into
    it.
 
@@ -24,10 +24,10 @@ them invested before they have a chance to bounce.
 ### Stage 0 — First join (spawn)
 
 - Player spawns into the **welcome area** (signs / hologram).
-- The Starter Guide book is **auto-given on first join** *and* reopenable any
-  time with `/starter`. (Belt and suspenders — signs point to `/starter` for
+- The Tutorial Guide book is **auto-given on first join** *and* reopenable any
+  time with `/tutorial`. (Belt and suspenders — signs point to `/tutorial` for
   anyone who closed it.)
-- Signs do three things only: welcome, "type `/starter`", and "walk through the
+- Signs do three things only: welcome, "type `/tutorial`", and "walk through the
   portal." Everything else lives in the book.
 
 ### Stage 1 — Explore: find your spot (`/rtp`)
@@ -141,7 +141,7 @@ These change the copy and the flow, so flagging them explicitly:
 5. **Values to fill in:** starter kit name + contents, rank-up cost, and the
    daily-reward amount.
 6. **Book delivery:** OK to auto-give the book on first join in addition to
-   `/starter`? (Strongly recommended.)
+   `/tutorial`? (Strongly recommended.)
 7. **Deliverable format:** do you want (a) this design + copy, (b) actual
    implementable server files (book NBT/JSON, sign text, kit/permission config),
    or (c) both? That decides what I build next.

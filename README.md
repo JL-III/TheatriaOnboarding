@@ -2,8 +2,8 @@
 
 A redesign of the new-player onboarding experience for the Theatria Minecraft
 server. Today onboarding is just oak signs at spawn; this project replaces that
-with a guided, task-based flow built around a **virtual Starter Guide book** —
-opened with `/starter`, re-rendered from each player's live progress, with
+with a guided, task-based flow built around a **virtual Tutorial Guide book** —
+opened with `/tutorial`, re-rendered from each player's live progress, with
 completed tasks struck through but still shown for reference. Delivered as a
 small custom **Paper plugin**.
 
@@ -25,13 +25,13 @@ New players learn Theatria's actual gameplay loop, one step at a time:
 ## What's here
 
 - **The plugin** — `pom.xml` + `src/main/…`: a Paper plugin that serves the
-  dynamic `/starter` book and tracks per-player progress.
+  dynamic `/tutorial` book and tracks per-player progress.
 - [`docs/onboarding-design.md`](docs/onboarding-design.md) — the full flow,
   design principles, the friction analysis, and open questions.
 - [`docs/plugin-architecture.md`](docs/plugin-architecture.md) — how the dynamic
   virtual book works: task model, progress detection, persistence, rendering.
-- [`content/starter-book.md`](content/starter-book.md) — page-by-page text for
-  the `/starter` virtual book.
+- [`content/tutorial-book.md`](content/tutorial-book.md) — page-by-page text for
+  the `/tutorial` virtual book.
 - [`content/spawn-signs.md`](content/spawn-signs.md) — replacement text for the
   spawn signs / portal area.
 
@@ -61,16 +61,16 @@ Run `make help` to list targets (`build`, `clean`, `help`).
 
 ## In-game
 
-- `/starter` (aliases `/guide`, `/tutorial`) — open the virtual Starter Guide.
-- A clickable "open your Starter Guide" reminder is sent on join until onboarding
+- `/tutorial` (aliases `/guide`, `/starter`) — open the virtual Tutorial Guide.
+- A clickable "open your Tutorial Guide" reminder is sent on join until onboarding
   is finished (toggle `join-reminder` in `config.yml`; skipped for alts).
-- `/starter reset [player]` — reset progress (needs `theatria.onboarding.admin`).
-- `/starter debug [player]` — runtime snapshot (admin): per-task state, available
+- `/tutorial reset [player]` — reset progress (needs `theatria.onboarding.admin`).
+- `/tutorial debug [player]` — runtime snapshot (admin): per-task state, available
   hooks, and the Sessions view of DAILY. Set `debug: true` in `config.yml` for
   per-recheck DAILY logging.
 - The book auto-opens on a player's first ever join (toggle in `config.yml`).
-- Task-completion chat messages are clickable (hover: "Click to view your starter
-  tasks") and run `/starter` when clicked.
+- Task-completion chat messages are clickable (hover: "Click to view your tutorial
+  tasks") and run `/tutorial` when clicked.
 
 ## Status
 

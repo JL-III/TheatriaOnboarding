@@ -95,7 +95,7 @@ public final class SessionsHook {
     }
 
     /**
-     * A one-line, human-readable snapshot of the Sessions side for the {@code /starter
+     * A one-line, human-readable snapshot of the Sessions side for the {@code /tutorial
      * debug} dump. Safe to call even when TheatriaSessions is absent or incompatible.
      */
     public String describe(Player player) {

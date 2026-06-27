@@ -1,7 +1,7 @@
-# Starter Guide — plugin architecture
+# Tutorial Guide — plugin architecture
 
-The Starter Guide is a **virtual book** that re-renders from each player's live
-progress every time they open it with `/starter`. Completed tasks are **struck
+The Tutorial Guide is a **virtual book** that re-renders from each player's live
+progress every time they open it with `/tutorial`. Completed tasks are **struck
 through but still shown**, so the book doubles as a permanent reference. This
 requires a small custom **Paper plugin** (`TheatriaOnboarding`).
 
@@ -15,10 +15,10 @@ and a book renderer.
 
 ## Virtual book (never an item)
 
-The book is **not** given to the inventory. On `/starter` the plugin builds a
+The book is **not** given to the inventory. On `/tutorial` the plugin builds a
 `BookMeta` from the player's current progress and calls `player.openBook(book)`
 (Paper API) to display it transiently. Closing it leaves nothing behind; the
-next `/starter` rebuilds it fresh with any newly-completed tasks crossed out.
+next `/tutorial` rebuilds it fresh with any newly-completed tasks crossed out.
 
 ## Task model
 
@@ -96,23 +96,23 @@ When building the book, each task line is rendered via Adventure components:
   styling; the current/next task can be highlighted.
 - A header shows overall progress, e.g. `Progress: 3 / 6`.
 
-Pages follow the copy in [`../content/starter-book.md`]; the renderer just swaps
+Pages follow the copy in [`../content/tutorial-book.md`]; the renderer just swaps
 each task between its incomplete and struck-through completed form.
 
 ## Commands & permissions
 
-- `/starter` (aliases `/guide`, `/tutorial`) — open the virtual book. Perm
+- `/tutorial` (aliases `/guide`, `/tutorial`) — open the virtual book. Perm
   `theatria.onboarding.use` (default: true).
-- `/starter reset [player]` — reset progress (admin). Perm
+- `/tutorial reset [player]` — reset progress (admin). Perm
   `theatria.onboarding.admin` (default: op).
-- `/starter debug [player]` — print a runtime snapshot for fault-finding (admin):
+- `/tutorial debug [player]` — print a runtime snapshot for fault-finding (admin):
   each task's completion state, which detection hooks are available, and the
   Sessions side's view of DAILY (active seconds vs threshold, met-threshold,
   earned). Defaults to the sender when no player is given.
 - **Auto-open on first join** (configurable): the first time a player ever
   joins, open the book automatically.
 - **Join reminder** (`join-reminder`, default true): a clickable "open your
-  Starter Guide" line sent on each join until onboarding is complete; gated on
+  Tutorial Guide" line sent on each join until onboarding is complete; gated on
   `theatria.onboarding.use` (so alts get none).
 
 ## Observability
@@ -125,7 +125,7 @@ For diagnosing why a task does or doesn't complete at runtime:
 - **`debug: true`** (config) adds per-recheck DAILY decisions — the SessionsAPI's
   answer plus active-seconds/threshold. Chatty (recheck runs every 30s per online
   player), so turn it on to investigate, then off.
-- **On demand:** `/starter debug [player]` collapses all of the above into one
+- **On demand:** `/tutorial debug [player]` collapses all of the above into one
   snapshot without touching the log level.
 - On the Sessions side, `SessionsAPI` logs each `hasEarnedDailyReward` query under
   TheatriaSessions' own `debug: true`.
@@ -140,7 +140,7 @@ For diagnosing why a task does or doesn't complete at runtime:
   ranked up"; a primary group outside this set completes RANKUP on join. Empty
   disables the retroactive check.
 - `auto-open-first-join: true`
-- `join-reminder: true` — clickable "open /starter" nudge on join until done.
+- `join-reminder: true` — clickable "open /tutorial" nudge on join until done.
 - `commands:` — fallback command aliases for `sethome`, `claim`, `rankup`, and
   the `sell` EARN-fallback. `sethome`/`claim` are only used when their
   Essentials/Lands hook is unavailable; `rankup` always uses commands.

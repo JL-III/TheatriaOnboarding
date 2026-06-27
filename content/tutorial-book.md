@@ -1,4 +1,4 @@
-# Starter Guide — `/starter` book
+# Tutorial Guide — `/tutorial` book
 
 Page-by-page copy for the virtual book. Kept short on purpose: a Minecraft
 written book fits ~14 lines / ~256 characters per page, so each task is its own
@@ -16,7 +16,7 @@ in order — they only
 take a few minutes.
 
 Reopen it anytime:
-   /starter
+   /tutorial
 
 Turn the page  >>
 ```
@@ -35,7 +35,7 @@ Not satisfied? Use
 /rtp until you find
 a spot you like,
 then continue your
-/starter tasks.
+/tutorial tasks.
 ```
 
 **Page 3 — Task 2: Set your home**

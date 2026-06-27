@@ -15,14 +15,14 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Handles {@code /starter} (open the guide), {@code /starter reset [player]}, and
- * {@code /starter debug [player]} (a runtime snapshot for fault-finding).
+ * Handles {@code /tutorial} (open the guide), {@code /tutorial reset [player]}, and
+ * {@code /tutorial debug [player]} (a runtime snapshot for fault-finding).
  */
-public class StarterCommand implements TabExecutor {
+public class TutorialCommand implements TabExecutor {
 
     private final TheatriaOnboarding plugin;
 
-    public StarterCommand(TheatriaOnboarding plugin) {
+    public TutorialCommand(TheatriaOnboarding plugin) {
         this.plugin = plugin;
     }
 
@@ -66,7 +66,7 @@ public class StarterCommand implements TabExecutor {
         } else if (sender instanceof Player self) {
             target = self;
         } else {
-            sender.sendMessage(Component.text("Usage: /starter reset <player>", NamedTextColor.RED));
+            sender.sendMessage(Component.text("Usage: /tutorial reset <player>", NamedTextColor.RED));
             return true;
         }
 
@@ -98,7 +98,7 @@ public class StarterCommand implements TabExecutor {
         } else if (sender instanceof Player self) {
             target = self;
         } else {
-            sender.sendMessage(Component.text("Usage: /starter debug <player>", NamedTextColor.RED));
+            sender.sendMessage(Component.text("Usage: /tutorial debug <player>", NamedTextColor.RED));
             return true;
         }
 

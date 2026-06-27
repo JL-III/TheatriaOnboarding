@@ -32,10 +32,10 @@ rtp-min-distance: 100.0
 # group isn't "default", change this, or RANKUP may complete for everyone.
 rankup-starting-groups: [default]
 
-# Open the Starter Guide automatically the first time a player ever joins.
+# Open the Tutorial Guide automatically the first time a player ever joins.
 auto-open-first-join: true
 
-# Send a clickable "open your Starter Guide" reminder on join, shown each time the
+# Send a clickable "open your Tutorial Guide" reminder on join, shown each time the
 # player logs in until they finish onboarding (skipped once all tasks are done, and
 # for players without theatria.onboarding.use, e.g. alts).
 join-reminder: true

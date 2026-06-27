@@ -1,7 +1,7 @@
 package com.theatria.onboarding;
 
 /**
- * The ordered onboarding tasks. Each carries the text shown in the Starter Guide
+ * The ordered onboarding tasks. Each carries the text shown in the Tutorial Guide
  * book: a title and the body lines. When a task is complete the same text is
  * still rendered, but struck through (see {@link BookRenderer}), so the player
  * can always reference the command they used.
@@ -17,7 +17,7 @@ public enum TaskId {
             "/rtp until you find",
             "a spot you like,",
             "then continue your",
-            "/starter tasks."
+            "/tutorial tasks."
     }),
 
     SETHOME("Set your home", new String[]{

@@ -147,17 +147,17 @@ public class ProgressManager {
                     "You've finished onboarding — welcome to Theatria!", NamedTextColor.GOLD)));
         } else {
             player.sendMessage(openGuide(Component.text(
-                    "Open /starter to see what's next.", NamedTextColor.GRAY)));
+                    "Open /tutorial to see what's next.", NamedTextColor.GRAY)));
         }
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.7f, 1.4f);
     }
 
-    /** Adds a "click to view starter tasks" hover + click-to-run-/starter action. */
+    /** Adds a "click to view tutorial tasks" hover + click-to-run-/tutorial action. */
     private Component openGuide(Component base) {
         return base
-                .hoverEvent(HoverEvent.showText(Component.text("Click to view your starter tasks",
+                .hoverEvent(HoverEvent.showText(Component.text("Click to view your tutorial tasks",
                         NamedTextColor.YELLOW)))
-                .clickEvent(ClickEvent.runCommand("/starter"));
+                .clickEvent(ClickEvent.runCommand("/tutorial"));
     }
 
     /**

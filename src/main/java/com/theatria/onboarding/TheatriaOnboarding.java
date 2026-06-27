@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * TheatriaOnboarding — a guided new-player experience built around a dynamic
- * virtual Starter Guide book ({@code /starter}) that re-renders from each
+ * virtual Tutorial Guide book ({@code /tutorial}) that re-renders from each
  * player's live progress, crossing out completed tasks while keeping them
  * visible for reference.
  */
@@ -44,13 +44,13 @@ public final class TheatriaOnboarding extends JavaPlugin {
         this.luckPermsHook = new LuckPermsHook(this, getLogger());
         this.sessionsHook = new SessionsHook(this);
 
-        StarterCommand command = new StarterCommand(this);
-        PluginCommand starter = getCommand("starter");
-        if (starter != null) {
-            starter.setExecutor(command);
-            starter.setTabCompleter(command);
+        TutorialCommand command = new TutorialCommand(this);
+        PluginCommand tutorial = getCommand("tutorial");
+        if (tutorial != null) {
+            tutorial.setExecutor(command);
+            tutorial.setTabCompleter(command);
         } else {
-            getLogger().severe("Command 'starter' missing from plugin.yml — disabling.");
+            getLogger().severe("Command 'tutorial' missing from plugin.yml — disabling.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }

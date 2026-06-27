@@ -69,23 +69,23 @@ public class OnboardingListeners implements Listener {
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 if (player.isOnline()
                         && !plugin.progress().get(player.getUniqueId()).allComplete()) {
-                    player.sendMessage(starterReminder());
+                    player.sendMessage(tutorialReminder());
                 }
             }, 60L);
         }
     }
 
-    /** A clickable one-line nudge to open the Starter Guide (runs /starter on click). */
-    private Component starterReminder() {
+    /** A clickable one-line nudge to open the Tutorial Guide (runs /tutorial on click). */
+    private Component tutorialReminder() {
         return Component.text()
                 .append(Component.text("» ", NamedTextColor.DARK_GREEN))
                 .append(Component.text("New to Theatria? Open your ", NamedTextColor.YELLOW))
-                .append(Component.text("Starter Guide", NamedTextColor.GOLD, TextDecoration.BOLD))
+                .append(Component.text("Tutorial Guide", NamedTextColor.GOLD, TextDecoration.BOLD))
                 .append(Component.text(": ", NamedTextColor.YELLOW))
-                .append(Component.text("/starter", NamedTextColor.AQUA, TextDecoration.BOLD))
+                .append(Component.text("/tutorial", NamedTextColor.AQUA, TextDecoration.BOLD))
                 .hoverEvent(HoverEvent.showText(
-                        Component.text("Click to open your Starter Guide", NamedTextColor.YELLOW)))
-                .clickEvent(ClickEvent.runCommand("/starter"))
+                        Component.text("Click to open your Tutorial Guide", NamedTextColor.YELLOW)))
+                .clickEvent(ClickEvent.runCommand("/tutorial"))
                 .build();
     }
 

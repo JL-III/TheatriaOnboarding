@@ -1,7 +1,7 @@
 name: TheatriaOnboarding
 version: '${project.version}'
 main: com.theatria.onboarding.TheatriaOnboarding
-description: Guided new-player onboarding with a dynamic virtual Starter Guide book.
+description: Guided new-player onboarding with a dynamic virtual Tutorial Guide book.
 authors: [Theatria]
 
 # Minecraft 26.x uses the new year-based scheme. If the server rejects this
@@ -16,14 +16,14 @@ api-version: '26.1.2'
 softdepend: [Vault, Essentials, Lands, Rankup, LuckPerms, TheatriaSessions]
 
 commands:
-  starter:
-    description: Open your Starter Guide book.
-    usage: /starter [reset|debug [player]]
-    aliases: [guide, tutorial]
+  tutorial:
+    description: Open your Tutorial Guide book.
+    usage: /tutorial [reset|debug [player]]
+    aliases: [guide, starter]
 
 permissions:
   theatria.onboarding.use:
-    description: Open the Starter Guide.
+    description: Open the Tutorial Guide.
     default: true
   theatria.onboarding.admin:
     description: Reset onboarding progress.
