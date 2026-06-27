@@ -47,7 +47,6 @@ public enum TaskId {
             "want to build:",
             "",
             "/lands create",
-            "<name>",
             "",
             "Costs $1,000 and",
             "creates your land."

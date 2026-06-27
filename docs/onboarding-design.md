@@ -57,10 +57,10 @@ This is the make-or-break step (see Friction analysis below). Structured as:
 
 ### Stage 4 — Protect: claim your land (`/lands create`)
 
-- Claims run on the **Lands** plugin. We teach **`/lands create <name>`**: it's
-  the more intuitive command (name your land; it claims the chunk you're standing
-  in), and unlike `/claim` it still works when the player is already a member of
-  another land — so a friend trusting them in first can't strand them on this step.
+- Claims run on the **Lands** plugin. We teach **`/lands create`**: it's the more
+  intuitive command (it claims the chunk you're standing in — no name argument
+  needed), and unlike `/claim` it still works when the player is already a member
+  of another land — so a friend trusting them in first can't strand them on this step.
   (A bare `/claim` auto-creates a first land too, but fails once you belong to any
   land.) Detection is unchanged either way: the Lands API reports land membership.
 - **First-claim cost = land-creation price.** Recommended: set Lands'
@@ -130,8 +130,8 @@ funnel leaks.
 
 These change the copy and the flow, so flagging them explicitly:
 
-1. ~~**Claim mechanic.**~~ ✅ Confirmed: **Lands** `/lands create <name>` (taught
-   over `/claim` — more intuitive and works even when already in another land);
+1. ~~**Claim mechanic.**~~ ✅ Confirmed: **Lands** `/lands create` (taught over
+   `/claim` — more intuitive and works even when already in another land);
    recommended first-claim cost **$1,000** (land-creation price, from EssentialsX
    via Vault).
 2. ~~**Money method.**~~ ✅ Confirmed: mine & sell cobblestone, coal, copper.
