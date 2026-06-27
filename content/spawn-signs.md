@@ -37,10 +37,14 @@ the Starter Guide book.
 ### Sign 4 — Daily reward teaser
 ```
      TIP
-  Play 30 min
- = daily reward
-   free money!
+  Play daily for
+  a free reward!
+   See /starter
 ```
+> Signs are static, so don't hardcode a minute count here (it would drift from the
+> Sessions threshold). Point at `/starter`, whose book shows the live requirement.
+> If you do want a number on the sign, set it to TheatriaSessions' real threshold
+> (active, non-AFK minutes) and keep it in sync by hand.
 
 ### Sign 5 — Help (optional)
 ```

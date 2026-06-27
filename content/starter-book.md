@@ -113,10 +113,15 @@ more perks.
 ```
 BONUS
 
-Play ~30 min to grab
+Play ~{min} min to grab
 your DAILY REWARD —
 easy money to start.
 
 Stuck? Just ask in
 chat. Have fun!
 ```
+
+> `{min}` is filled in live by the renderer from TheatriaSessions' real reward
+> threshold (active, non-AFK minutes), so the book never promises a number that
+> drifts from config. When TheatriaSessions is absent it shows `daily-minutes`.
+> Note: Sessions counts **active** time — AFK minutes don't count toward it.

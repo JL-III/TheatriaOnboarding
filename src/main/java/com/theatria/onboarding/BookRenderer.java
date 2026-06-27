@@ -16,6 +16,12 @@ import java.util.List;
  */
 public class BookRenderer {
 
+    private final TheatriaOnboarding plugin;
+
+    public BookRenderer(TheatriaOnboarding plugin) {
+        this.plugin = plugin;
+    }
+
     public Book build(PlayerProgress progress) {
         List<Component> pages = new ArrayList<>();
         pages.add(coverPage(progress));
@@ -70,9 +76,26 @@ public class BookRenderer {
         builder.append(Component.newline()).append(Component.newline());
 
         for (String text : task.body()) {
+            if (task == TaskId.DAILY) {
+                text = text.replace("{min}", String.valueOf(dailyRewardMinutes()));
+            }
             builder.append(line(text, done)).append(Component.newline());
         }
         return builder.build();
+    }
+
+    /**
+     * The daily-reward playtime requirement, in whole minutes, shown on the DAILY
+     * page. Reads TheatriaSessions' live threshold when available so the book never
+     * drifts from the real value; otherwise falls back to the {@code daily-minutes}
+     * config (used by the playtime-statistic fallback when Sessions is absent).
+     */
+    private int dailyRewardMinutes() {
+        int fromSessions = plugin.sessionsHook().thresholdMinutes();
+        if (fromSessions > 0) {
+            return fromSessions;
+        }
+        return plugin.getConfig().getInt("daily-minutes", 30);
     }
 
     /** A body line: normal when pending, gray + struck through when complete. */

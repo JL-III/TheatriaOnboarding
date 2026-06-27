@@ -62,7 +62,7 @@ public enum TaskId {
     }),
 
     DAILY("Daily reward", new String[]{
-            "Play ~30 min to",
+            "Play ~{min} min to",
             "grab your DAILY",
             "REWARD - easy",
             "money to start."

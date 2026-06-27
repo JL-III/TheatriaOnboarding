@@ -16,18 +16,20 @@ import java.util.UUID;
  *
  * <p>Unlike the third-party hooks (Essentials/Lands/Rankup/LuckPerms), which use
  * reflection because we don't control those plugins, TheatriaSessions is
- * first-party: we depend on its published {@code SessionsAPI} directly (compile-time,
- * {@code provided} scope) and call it with no reflection. It stays a <em>soft</em>
- * dependency — every use of {@link SessionsAPI} is gated by {@link #isAvailable()}
- * (a plugin-presence check that touches no Sessions classes), so when the plugin is
- * absent its classes are never loaded and the caller falls back to the playtime
- * statistic.
+ * first-party: we depend on its published {@code SessionsAPI} directly (compile-time)
+ * and call it without reflection. It stays a <em>soft</em> dependency: a
+ * plugin-presence check gates access, and every call is wrapped so that if
+ * TheatriaSessions is absent OR an incompatible version is installed (so the
+ * {@code SessionsAPI} class is missing and resolving it throws
+ * {@link NoClassDefFoundError}), the hook reports not-earned/unavailable and the
+ * caller falls back to the playtime statistic — rather than letting the linkage
+ * error abort {@code recheck} and take SETHOME/CLAIM/RANKUP down with it.
  */
 public final class SessionsHook {
 
     private final TheatriaOnboarding plugin;
     private final boolean present;
-    private boolean warnedNullApi;
+    private boolean warned;
 
     public SessionsHook(TheatriaOnboarding plugin) {
         this.plugin = plugin;
@@ -36,58 +38,90 @@ public final class SessionsHook {
                 + " — DAILY uses " + (present ? "the SessionsAPI" : "the playtime statistic"));
     }
 
-    /** True when TheatriaSessions is installed. Gate all {@link #hasEarnedReward} calls on this. */
+    /** True when TheatriaSessions is installed. Gate all SessionsAPI use on this. */
     public boolean isAvailable() {
         return present;
     }
 
     /**
      * True if TheatriaSessions reports the player has earned today's daily reward.
-     * Only call when {@link #isAvailable()}. {@code SessionsAPI.get()} is null while
-     * that plugin is mid-(re)load, in which case this returns false (and warns once).
+     * Returns false (warning once) if the API is unavailable or a call fails — e.g.
+     * the plugin is mid-(re)load, or an incompatible version lacks {@code SessionsAPI}.
      */
     public boolean hasEarnedReward(Player player) {
         if (!present) {
             return false;
         }
-        SessionsAPI api = SessionsAPI.get();
-        if (api == null) {
-            if (!warnedNullApi) {
-                warnedNullApi = true;
-                plugin.getLogger().warning("TheatriaSessions is installed but SessionsAPI.get() "
-                        + "returned null (plugin disabled or mid-reload?); DAILY can't be confirmed "
-                        + "until it is back. Falling through as not-earned for now.");
+        try {
+            SessionsAPI api = SessionsAPI.get();
+            if (api == null) {
+                warnOnce("SessionsAPI.get() returned null (TheatriaSessions disabled or mid-reload)");
+                return false;
             }
+            boolean earned = api.hasEarnedDailyReward(player.getUniqueId());
+            if (plugin.isDebug()) {
+                UUID id = player.getUniqueId();
+                plugin.debug("SessionsHook: " + player.getName() + " earned=" + earned
+                        + " [" + api.getSessionSeconds(id) + "/" + api.getThresholdSeconds()
+                        + "s active, metThreshold=" + api.hasMetThreshold(id)
+                        + ", hasSession=" + api.hasSession(id) + "]");
+            }
+            return earned;
+        } catch (Throwable t) {
+            warnOnce("SessionsAPI call failed — is TheatriaSessions a compatible version? " + t);
             return false;
         }
-        boolean earned = api.hasEarnedDailyReward(player.getUniqueId());
-        if (plugin.isDebug()) {
-            UUID id = player.getUniqueId();
-            plugin.debug("SessionsHook: " + player.getName() + " earned=" + earned
-                    + " [" + api.getSessionSeconds(id) + "/" + api.getThresholdSeconds()
-                    + "s active, metThreshold=" + api.hasMetThreshold(id)
-                    + ", hasSession=" + api.hasSession(id) + "]");
+    }
+
+    /**
+     * The daily-reward active-playtime threshold in whole minutes, or {@code -1} when
+     * TheatriaSessions is unavailable (so callers fall back to their own configured
+     * value). Lets the book show the live requirement instead of a hardcoded number.
+     */
+    public int thresholdMinutes() {
+        if (!present) {
+            return -1;
         }
-        return earned;
+        try {
+            SessionsAPI api = SessionsAPI.get();
+            if (api == null) {
+                return -1;
+            }
+            return Math.round(api.getThresholdSeconds() / 60.0f);
+        } catch (Throwable t) {
+            warnOnce("SessionsAPI call failed — is TheatriaSessions a compatible version? " + t);
+            return -1;
+        }
     }
 
     /**
      * A one-line, human-readable snapshot of the Sessions side for the {@code /starter
-     * debug} dump. Keeps all {@link SessionsAPI} access behind the presence guard so it
-     * is safe to call even when TheatriaSessions is absent.
+     * debug} dump. Safe to call even when TheatriaSessions is absent or incompatible.
      */
     public String describe(Player player) {
         if (!present) {
             return "TheatriaSessions absent — DAILY uses the playtime statistic";
         }
-        SessionsAPI api = SessionsAPI.get();
-        if (api == null) {
-            return "TheatriaSessions present but SessionsAPI unavailable (disabled/mid-reload?)";
+        try {
+            SessionsAPI api = SessionsAPI.get();
+            if (api == null) {
+                return "TheatriaSessions present but SessionsAPI unavailable (disabled/mid-reload?)";
+            }
+            UUID id = player.getUniqueId();
+            return String.format(
+                    "session=%d/%ds active, metThreshold=%b, earnedReward=%b, hasSession=%b",
+                    api.getSessionSeconds(id), api.getThresholdSeconds(),
+                    api.hasMetThreshold(id), api.hasEarnedDailyReward(id), api.hasSession(id));
+        } catch (Throwable t) {
+            return "SessionsAPI call failed (incompatible TheatriaSessions version?): " + t;
         }
-        UUID id = player.getUniqueId();
-        return String.format(
-                "session=%d/%ds active, metThreshold=%b, earnedReward=%b, hasSession=%b",
-                api.getSessionSeconds(id), api.getThresholdSeconds(),
-                api.hasMetThreshold(id), api.hasEarnedDailyReward(id), api.hasSession(id));
+    }
+
+    private void warnOnce(String reason) {
+        if (!warned) {
+            warned = true;
+            plugin.getLogger().warning("TheatriaSessions hook: " + reason
+                    + ". DAILY falls through as not-earned until resolved.");
+        }
     }
 }

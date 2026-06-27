@@ -42,7 +42,11 @@ public class OnboardingListeners implements Listener {
         plugin.progress().markSeen(player);
         plugin.progress().recheck(player);
 
-        if (first && plugin.getConfig().getBoolean("auto-open-first-join", true)) {
+        // Don't auto-open for players without the onboarding permission — e.g. alts,
+        // which servers exclude by removing this node (the same way Sessions excludes
+        // them via theatria.sessions.allow). They also can't open it manually.
+        if (first && plugin.getConfig().getBoolean("auto-open-first-join", true)
+                && player.hasPermission("theatria.onboarding.use")) {
             // Slight delay so the client is ready to receive the book.
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 if (player.isOnline()) {

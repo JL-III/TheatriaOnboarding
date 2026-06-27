@@ -35,7 +35,7 @@ public final class TheatriaOnboarding extends JavaPlugin {
         setupEconomy();
 
         this.progress = new ProgressManager(this);
-        this.renderer = new BookRenderer();
+        this.renderer = new BookRenderer(this);
 
         this.essentialsHook = new EssentialsHook(getLogger());
         this.landsHook = new LandsHook(this, getLogger());
