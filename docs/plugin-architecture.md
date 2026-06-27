@@ -66,7 +66,8 @@ falls back to command matching when a plugin/hook isn't available:
 
 The Essentials/Lands/LuckPerms hooks depend on those plugins' **published APIs**
 directly (`provided` scope — EssentialsX from repo.essentialsx.net, LuckPerms from
-Maven Central, Lands from JitPack). Each stays a **soft** dependency: the typed
+Maven Central, Lands from repo.incredibleplugins.com). Each stays a **soft**
+dependency: the typed
 classes are only touched after a by-name plugin-presence check, so they never
 resolve when the plugin is absent. The **Rankup** hook remains **reflective** —
 Rankup3 ships no consumable Maven artifact — registering its `PlayerRankupEvent` by

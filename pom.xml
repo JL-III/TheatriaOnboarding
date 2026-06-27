@@ -31,29 +31,62 @@
         <lands.version>7.25.14</lands.version>
     </properties>
 
+    <!-- ====================================================================
+         Repository ordering & scoping. Maven has no per-groupId repo filter
+         (that's a Gradle-only feature), so "only check JitPack for Vault" is
+         achieved two ways here:
+
+           1. ORDER — Maven walks repos top-to-bottom and stops at the first
+              that has the artifact. Maven Central is declared FIRST and JitPack
+              LAST, so every dependency that lives in Central or a plugin repo
+              resolves before JitPack is ever consulted. JitPack ends up queried
+              only for VaultAPI (the one artifact that genuinely lives nowhere
+              else).
+           2. release/snapshot SCOPING — each repo enables only the kind of
+              version it actually serves. Crucially, JitPack has snapshots
+              DISABLED, so Maven no longer asks it for the EssentialsX
+              *-SNAPSHOT metadata — that lookup was the source of the JitPack
+              401 noise that slowed every build.
+         ==================================================================== -->
     <repositories>
+        <!-- Maven Central first: LuckPerms api (and any future common dep)
+             resolves here immediately and never touches the repos below. -->
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <!-- Paper API. The 26.1+ "{ver}.build.N-stable" coords are releases;
+             keep snapshots on so an older -R0.1-SNAPSHOT bump still resolves. -->
         <repository>
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
+        <!-- EssentialsX: snapshots-only repo, serves 2.21.0-SNAPSHOT. Releases
+             disabled so Maven won't probe it for release artifacts. -->
         <repository>
             <id>essentialsx</id>
             <url>https://repo.essentialsx.net/snapshots/</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
+        <!-- Lands API: releases repo, serves lands-api 7.25.x. -->
         <repository>
             <id>incredibleplugins</id>
             <url>https://repo.incredibleplugins.com/repository/releases/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
         </repository>
-        <!-- First-party TheatriaSessions artifact (the SessionsAPI). GitHub Packages
-             requires authentication even to download, so add a matching <server> to
-             your ~/.m2/settings.xml:
+        <!-- First-party TheatriaSessions artifact (the SessionsAPI), released
+             versions only (v1.0.0-alpha.6, …). GitHub Packages requires
+             authentication even to download, so add a matching <server> to your
+             ~/.m2/settings.xml whose <id> equals this repo's id (github):
 
                <server>
-                 <id>github-theatriasessions</id>
+                 <id>github</id>
                  <username>YOUR_GITHUB_USERNAME</username>
                  <password>A_GITHUB_TOKEN_WITH_read:packages</password>
                </server>
@@ -62,6 +95,18 @@
         <repository>
             <id>github</id>
             <url>https://maven.pkg.github.com/JL-III/TheatriaSessions</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <!-- JitPack LAST, and only for VaultAPI. Snapshots disabled so it is
+             never consulted for the EssentialsX *-SNAPSHOT metadata (the old
+             source of per-build 401 noise); by ordering, it's reached only for
+             the one release artifact — VaultAPI — that lives nowhere else. -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
         </repository>
     </repositories>
 
