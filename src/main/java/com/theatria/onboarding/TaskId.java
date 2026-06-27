@@ -55,7 +55,7 @@ public enum TaskId {
     RANKUP("Rank up", new String[]{
             "Keep selling, then:",
             "",
-            "/rank up",
+            "/rankup",
             "",
             "Higher rank =",
             "more perks."

@@ -23,10 +23,6 @@
              ==================================================================== -->
         <paper.version>26.1.2.build.69-stable</paper.version>
         <java.version>25</java.version>
-
-        <!-- TheatriaSessions API (first-party) used for the DAILY task. Bump this
-             to whatever version TheatriaSessions last published to GitHub Packages. -->
-        <theatriasessions.version>v1.0.0-alpha.6</theatriasessions.version>
     </properties>
 
     <repositories>
@@ -50,7 +46,7 @@
 
              In CI, set username to ${env.GITHUB_ACTOR} and password to a token. -->
         <repository>
-            <id>github-theatriasessions</id>
+            <id>github</id>
             <url>https://maven.pkg.github.com/JL-III/TheatriaSessions</url>
         </repository>
     </repositories>
@@ -81,8 +77,7 @@
         <dependency>
             <groupId>com.playtheatria</groupId>
             <artifactId>theatriasessions</artifactId>
-            <version>${theatriasessions.version}</version>
-            <scope>provided</scope>
+            <version>v1.0.0-alpha.6</version>
         </dependency>
     </dependencies>
 
