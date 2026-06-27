@@ -42,6 +42,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>essentialsx</id>
+            <url>https://repo.essentialsx.net/snapshots/</url>
+        </repository>
         <!-- First-party TheatriaSessions artifact (the SessionsAPI). GitHub Packages
              requires authentication even to download, so add a matching <server> to
              your ~/.m2/settings.xml:
@@ -86,6 +90,24 @@
             <groupId>com.playtheatria</groupId>
             <artifactId>theatriasessions</artifactId>
             <version>v1.0.0-alpha.6</version>
+        </dependency>
+
+        <!-- EssentialsX API (third-party, published to repo.essentialsx.net).
+             'provided': supplied by the Essentials plugin at runtime; used only by
+             EssentialsHook (cast guarded by a presence check). Excludes the transitive
+             Spigot API so the Paper API wins on the compile classpath (matches how
+             TheatriaSessions depends on it). Bump the version to match your server. -->
+        <dependency>
+            <groupId>net.essentialsx</groupId>
+            <artifactId>EssentialsX</artifactId>
+            <version>2.21.0-SNAPSHOT</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>spigot-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- LuckPerms API (third-party, published to Maven Central). 'provided':
