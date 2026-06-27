@@ -44,11 +44,11 @@ them invested before they have a chance to bounce.
 - Once they like a spot: `/sethome`, and learn `/home` to return.
 - Instant, satisfying, and it anchors them to a place they now feel is "theirs."
 
-### Stage 3 — Earn: your first money (`/kit starter` → `/worth` → `/sell hand`)
+### Stage 3 — Earn: your first money (`/kit welcome` → `/worth` → `/sell hand`)
 
 This is the make-or-break step (see Friction analysis below). Structured as:
 
-1. **Get tools:** `/kit starter` (or however we hand out starter gear).
+1. **Get tools:** `/kit welcome` (or however we hand out welcome gear).
 2. **First quick win:** mine/chop a few blocks, then `/sell hand` immediately so
    the money loop *clicks* in under a minute.
 3. **Learn to value items:** `/worth` while holding something.
@@ -98,8 +98,8 @@ The earning step is also the *most important* thing onboarding can teach,
 because the economy is Theatria's core loop. So we don't cut it — we **convert
 it from an open-ended grind into a bounded, guided quest:**
 
-1. **Give a starter kit.** A fresh player with no pickaxe/sword can't earn.
-   `/kit starter` (basic tools + food) removes the cold-start wall.
+1. **Give a welcome kit.** A fresh player with no pickaxe/sword can't earn.
+   `/kit welcome` (basic tools + food) removes the cold-start wall.
 2. **One immediate sale.** Have them `/sell hand` on their very first gathered
    stack so they see money arrive *before* the grind. Momentum beats
    instruction.
@@ -116,7 +116,7 @@ it from an open-ended grind into a bounded, guided quest:**
    into a near-finish rather than a wall. (Later chunk claims can cost more;
    onboarding only needs the first one.)
 
-**Verdict:** Keep the step. With a starter kit + one quick win + a single named
+**Verdict:** Keep the step. With a welcome kit + one quick win + a single named
 method (mine & sell cobblestone/coal/copper) + a low $1,000 first-claim target
 backstopped by the daily reward, it's the *right* amount of friction — it
 teaches the economy without losing people. Left open-ended, it's where your
@@ -138,7 +138,7 @@ These change the copy and the flow, so flagging them explicitly:
    `/home`, `/worth`, `/sell hand`, `/kit`, economy). Still to confirm: the RTP
    plugin (`/rtp`) and the rank-ladder plugin (`/rank up`). Knowing the exact
    plugins lets me write real config (book NBT/JSON, sign data, kit defs).
-5. **Values to fill in:** starter kit name + contents, rank-up cost, and the
+5. **Values to fill in:** welcome kit name + contents, rank-up cost, and the
    daily-reward amount.
 6. **Book delivery:** OK to auto-give the book on first join in addition to
    `/tutorial`? (Strongly recommended.)

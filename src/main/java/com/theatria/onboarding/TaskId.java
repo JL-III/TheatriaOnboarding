@@ -32,7 +32,7 @@ public enum TaskId {
 
     EARN("Make your first money", new String[]{
             "Grab gear:",
-            "/kit starter",
+            "/kit welcome",
             "",
             "Mine & sell cobble,",
             "coal, copper.",

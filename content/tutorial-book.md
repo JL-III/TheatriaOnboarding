@@ -58,7 +58,7 @@ TASK 3
 First money
 
 Grab gear:
-   /kit starter
+   /kit welcome
 
 Mine stone or chop
 wood. Hold an item

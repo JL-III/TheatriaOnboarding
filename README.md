@@ -17,7 +17,7 @@ New players learn Theatria's actual gameplay loop, one step at a time:
 |------|-------------|-----------|
 | 1. Explore | Find a spot you like | `/rtp` |
 | 2. Settle | Make it your home | `/sethome`, `/home` |
-| 3. Earn | Gather & sell to build a balance | `/kit starter`, `/worth`, `/sell hand` |
+| 3. Earn | Gather & sell to build a balance | `/kit welcome`, `/worth`, `/sell hand` |
 | 4. Protect | Claim your land | `/claim` |
 | 5. Progress | Rank up for perks | `/rank up` |
 | Bonus | Daily reward for playtime | play ~30 min |
@@ -91,5 +91,5 @@ degrade to command/statistic detection if the plugin is absent.
 **Build:** targets Paper 26.1.2 (`paper-api` `26.1.2.build.69-stable`) on JDK 25.
 The dev sandbox can't compile it (PaperMC repo is firewalled there), so build on
 a machine with repo access and JDK 25. **Pending values** to set when convenient:
-starter kit contents, rank-up cost, daily-reward amount, and
+welcome kit contents, rank-up cost, daily-reward amount, and
 `rankup-starting-groups` (your first rank group). See the design doc.
