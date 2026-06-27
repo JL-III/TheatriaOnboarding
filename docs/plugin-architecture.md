@@ -64,11 +64,15 @@ falls back to command matching when a plugin/hook isn't available:
   player's primary group is past the configured `rankup-starting-groups` (catches
   ranks gained while offline). Disabled unless starting groups are configured.
 
-The Essentials/Lands/Rankup/LuckPerms hooks are **reflective**: no compile-time
-dependency, bound at runtime if the plugin is present, and tolerant of API version
-differences. The Rankup hook registers the event dynamically by class name with a
-reflective executor. If a hook can't bind (plugin absent, or an API mismatch —
-logged once), that task falls back to command detection so the book still works.
+The Essentials/Lands/LuckPerms hooks depend on those plugins' **published APIs**
+directly (`provided` scope — EssentialsX from repo.essentialsx.net, LuckPerms from
+Maven Central, Lands from JitPack). Each stays a **soft** dependency: the typed
+classes are only touched after a by-name plugin-presence check, so they never
+resolve when the plugin is absent. The **Rankup** hook remains **reflective** —
+Rankup3 ships no consumable Maven artifact — registering its `PlayerRankupEvent` by
+class name with a reflective executor. If any hook can't bind (plugin absent, or an
+API mismatch — logged once), that task falls back to command detection so the book
+still works.
 
 TheatriaSessions is **first-party**, so DAILY instead depends on its published
 `SessionsAPI` directly — a `provided` Maven dependency

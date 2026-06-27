@@ -14,10 +14,10 @@ import java.util.UUID;
  * threshold, reset daily) instead of the vanilla {@code Statistic.PLAY_ONE_MINUTE},
  * which counts lifetime and AFK time and never resets.
  *
- * <p>Unlike the third-party hooks (Essentials/Lands/Rankup/LuckPerms), which use
- * reflection because we don't control those plugins, TheatriaSessions is
- * first-party: we depend on its published {@code SessionsAPI} directly (compile-time)
- * and call it without reflection. It stays a <em>soft</em> dependency: a
+ * <p>Like the Essentials/Lands/LuckPerms hooks, we depend on a published API
+ * directly (compile-time) and call it without reflection — here TheatriaSessions is
+ * first-party, so we publish {@code SessionsAPI} ourselves. It stays a
+ * <em>soft</em> dependency: a
  * plugin-presence check gates access, and every call is wrapped so that if
  * TheatriaSessions is absent OR an incompatible version is installed (so the
  * {@code SessionsAPI} class is missing and resolving it throws

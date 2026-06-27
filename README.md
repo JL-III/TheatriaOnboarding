@@ -83,10 +83,11 @@ ranks gained while offline, and **DAILY via the TheatriaSessions API** (the play
 has actually earned today's reward), with `RTP` completing when the spawn portal
 sends them into the wild. Confirmed mechanics are wired in: Lands `/lands create`
 (creates the land, $1,000 target from EssentialsX via Vault), and the
-mine-&-sell cobblestone/coal/copper method. The Essentials/Lands/Rankup/LuckPerms
-hooks are reflective (no extra build deps); DAILY depends on TheatriaSessions'
-published `SessionsAPI` directly (a `provided` GitHub Packages dependency). All
-degrade to command/statistic detection if the plugin is absent.
+mine-&-sell cobblestone/coal/copper method. The Essentials/Lands/LuckPerms hooks
+(and DAILY's TheatriaSessions hook) use those plugins' published APIs directly as
+`provided` dependencies; only the Rankup hook stays reflective (Rankup3 ships no
+Maven artifact). All are soft dependencies and degrade to command/statistic
+detection if the plugin is absent.
 
 **Build:** targets Paper 26.1.2 (`paper-api` `26.1.2.build.69-stable`) on JDK 25.
 The dev sandbox can't compile it (PaperMC repo is firewalled there), so build on
