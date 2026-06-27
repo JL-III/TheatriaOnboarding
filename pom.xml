@@ -130,8 +130,7 @@
         <dependency>
             <groupId>com.incredibleplugins</groupId>
             <artifactId>lands-api</artifactId>
-            <version>${lands.version}</version>
-            <scope>provided</scope>
+            <version>7.25.16</version>
         </dependency>
     </dependencies>
 
