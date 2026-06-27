@@ -42,9 +42,12 @@ falls back to command matching when a plugin/hook isn't available:
 
 - `SETHOME` → **Essentials hook** (`getUser(player).getHomes()` non-empty). The
   player must actually have a home — typing `/sethome` alone isn't enough.
-- `CLAIM` → **Lands hook** (`LandsIntegration.getLandPlayer(uuid).getLands()`
-  non-empty). The player must actually be in a claim. During onboarding the only
-  land a new player belongs to is the one their first `/lands create` made.
+- `CLAIM` → a typed **`LandPostCreateEvent`** listener (live, from the published
+  Lands API — no reflection) completes it the instant the player creates a land,
+  plus the **Lands hook** poll (`LandsIntegration.getLandPlayer(uuid).getLands()`
+  non-empty) as the backstop. The poll alone lagged up to 30s because
+  `/lands create` finishes via a GUI, not synchronously at the command. During
+  onboarding the only land a new player belongs to is the one they just made.
 - `EARN` → Vault `Economy#getBalance ≥ target`.
 - `DAILY` → **TheatriaSessions hook** (`SessionsAPI#hasEarnedDailyReward(uuid)`): the
   player has actually earned today's reward — active (non-AFK) playtime past

@@ -23,6 +23,14 @@
              ==================================================================== -->
         <paper.version>26.1.2.build.69-stable</paper.version>
         <java.version>25</java.version>
+
+        <!-- Lands API — for the typed LandPostCreateEvent listener that completes
+             CLAIM instantly. Pulled from JitPack (already a repo below). VERIFY the
+             coordinates and set the version to match YOUR server's Lands: see the
+             Lands wiki (https://wiki.incredibleplugins.com). Newer releases may sit
+             under com.github.IncrediblePlugins:LandsAPI or the official
+             repo.incredibleplugins.com repo — adjust the dependency below if so. -->
+        <lands.version>7.13.0</lands.version>
     </properties>
 
     <repositories>
@@ -78,6 +86,17 @@
             <groupId>com.playtheatria</groupId>
             <artifactId>theatriasessions</artifactId>
             <version>v1.0.0-alpha.6</version>
+        </dependency>
+
+        <!-- Lands API (third-party, published). 'provided': supplied by the Lands
+             plugin at runtime. Used only by LandsCreateListener, which is registered
+             ONLY when Lands is installed (see onEnable), so these classes never have
+             to resolve when Lands is absent — keeping Lands a soft dependency. -->
+        <dependency>
+            <groupId>com.github.Angeschossen</groupId>
+            <artifactId>LandsAPI</artifactId>
+            <version>${lands.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

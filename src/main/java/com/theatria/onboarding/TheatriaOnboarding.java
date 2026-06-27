@@ -1,6 +1,7 @@
 package com.theatria.onboarding;
 
 import com.theatria.onboarding.hook.EssentialsHook;
+import com.theatria.onboarding.hook.LandsCreateListener;
 import com.theatria.onboarding.hook.LandsHook;
 import com.theatria.onboarding.hook.LuckPermsHook;
 import com.theatria.onboarding.hook.RankupHook;
@@ -56,6 +57,13 @@ public final class TheatriaOnboarding extends JavaPlugin {
         }
 
         getServer().getPluginManager().registerEvents(new OnboardingListeners(this), this);
+
+        // Instant CLAIM completion via Lands' typed post-create event. Registered ONLY
+        // when Lands is present, so the Lands API classes never resolve otherwise
+        // (keeps Lands a soft dependency). LandsHook's poll stays as the backstop.
+        if (getServer().getPluginManager().getPlugin("Lands") != null) {
+            getServer().getPluginManager().registerEvents(new LandsCreateListener(this), this);
+        }
 
         // Periodically re-check balance/playtime tasks for online players.
         long period = 20L * 30; // 30 seconds
