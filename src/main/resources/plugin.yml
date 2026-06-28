@@ -1,7 +1,7 @@
 name: TheatriaOnboarding
 version: '${project.version}'
 main: com.theatria.onboarding.TheatriaOnboarding
-description: Guided new-player onboarding with a dynamic virtual Starter Guide book.
+description: Guided new-player onboarding with a dynamic virtual Tutorial Guide book.
 authors: [Theatria]
 
 # Minecraft 26.x uses the new year-based scheme. If the server rejects this
@@ -10,19 +10,20 @@ api-version: '26.1.2'
 
 # All optional. Vault -> EARN balance; Essentials -> SETHOME (home set);
 # Lands -> CLAIM (land owned); Rankup -> RANKUP (live PlayerRankupEvent);
-# LuckPerms -> RANKUP (join-time "past starting rank" check). Each task falls
-# back to command detection if its plugin/hook is unavailable.
-softdepend: [Vault, Essentials, Lands, Rankup, LuckPerms]
+# LuckPerms -> RANKUP (join-time "past starting rank" check);
+# TheatriaSessions -> DAILY (player has earned today's daily reward, via SessionsAPI).
+# Each task falls back to command/statistic detection if its plugin/hook is unavailable.
+softdepend: [Vault, Essentials, Lands, Rankup, LuckPerms, TheatriaSessions]
 
 commands:
-  starter:
-    description: Open your Starter Guide book.
-    usage: /starter [reset [player]]
+  tutorial:
+    description: Open your Tutorial Guide book.
+    usage: /tutorial [reset|debug [player]]
     aliases: [guide]
 
 permissions:
   theatria.onboarding.use:
-    description: Open the Starter Guide.
+    description: Open the Tutorial Guide.
     default: true
   theatria.onboarding.admin:
     description: Reset onboarding progress.

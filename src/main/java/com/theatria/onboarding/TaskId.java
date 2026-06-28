@@ -1,7 +1,7 @@
 package com.theatria.onboarding;
 
 /**
- * The ordered onboarding tasks. Each carries the text shown in the Starter Guide
+ * The ordered onboarding tasks. Each carries the text shown in the Tutorial Guide
  * book: a title and the body lines. When a task is complete the same text is
  * still rendered, but struck through (see {@link BookRenderer}), so the player
  * can always reference the command they used.
@@ -17,7 +17,7 @@ public enum TaskId {
             "/rtp until you find",
             "a spot you like,",
             "then continue your",
-            "/starter tasks."
+            "/tutorial tasks."
     }),
 
     SETHOME("Set your home", new String[]{
@@ -32,7 +32,7 @@ public enum TaskId {
 
     EARN("Make your first money", new String[]{
             "Grab gear:",
-            "/kit starter",
+            "/kit welcome",
             "",
             "Mine & sell cobble,",
             "coal, copper.",
@@ -46,7 +46,7 @@ public enum TaskId {
             "Stand where you",
             "want to build:",
             "",
-            "/claim",
+            "/lands create",
             "",
             "Costs $1,000 and",
             "creates your land."
@@ -55,14 +55,14 @@ public enum TaskId {
     RANKUP("Rank up", new String[]{
             "Keep selling, then:",
             "",
-            "/rank up",
+            "/rankup",
             "",
             "Higher rank =",
             "more perks."
     }),
 
     DAILY("Daily reward", new String[]{
-            "Play ~30 min to",
+            "Play ~{min} min to",
             "grab your DAILY",
             "REWARD - easy",
             "money to start."

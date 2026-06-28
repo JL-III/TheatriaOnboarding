@@ -1,10 +1,22 @@
 # TheatriaOnboarding configuration
 
+# Verbose debug logging to the server console for task detection — hook
+# availability at startup, and per-recheck DAILY decisions (the SessionsAPI's
+# answer plus active-seconds/threshold). Task completions are always logged at
+# INFO regardless. Turn this on to diagnose why a task is or isn't completing,
+# then turn it back off (recheck runs every 30s per online player, so it is chatty).
+debug: false
+
 # Money needed for the first Lands claim. Completing the EARN task requires the
 # player's balance to reach this (checked via Vault).
 earn-target: 1000.0
 
-# Minutes of playtime that complete the DAILY (daily reward) task.
+# DAILY (daily reward) task detection:
+#   Primary  -> TheatriaSessions' SessionsAPI (the player has actually earned today's
+#               reward: active, non-AFK playtime past its configured threshold, reset
+#               daily). Used automatically whenever TheatriaSessions is installed.
+#   Fallback -> when TheatriaSessions is absent, approximate from vanilla playtime:
+#               complete after this many minutes of (lifetime, AFK-inclusive) playtime.
 daily-minutes: 30
 
 # RTP completes when the player first leaves spawn — the portal teleport, or any
@@ -20,8 +32,13 @@ rtp-min-distance: 100.0
 # group isn't "default", change this, or RANKUP may complete for everyone.
 rankup-starting-groups: [default]
 
-# Open the Starter Guide automatically the first time a player ever joins.
+# Open the Tutorial Guide automatically the first time a player ever joins.
 auto-open-first-join: true
+
+# Send a clickable "open your Tutorial Guide" reminder on join, shown each time the
+# player logs in until they finish onboarding (skipped once all tasks are done, and
+# for players without theatria.onboarding.use, e.g. alts).
+join-reminder: true
 
 # Task detection:
 #   SETHOME -> confirmed via the Essentials API (player actually has a home).
@@ -32,7 +49,7 @@ auto-open-first-join: true
 # Matching is case-insensitive; multi-word entries like "rank up" match "/rank up ...".
 commands:
   sethome: [sethome, createhome]
-  claim: [claim, "lands claim"]
+  claim: ["lands create", "lands claim", claim]
   rankup: [rankup, "rank up"]
   # Used as the EARN fallback only when Vault is not installed.
   sell: [sell, "sell hand"]

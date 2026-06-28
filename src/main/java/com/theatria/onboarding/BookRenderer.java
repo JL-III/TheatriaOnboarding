@@ -9,12 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Builds the virtual Starter Guide book from a player's live progress. The book
+ * Builds the virtual Tutorial Guide book from a player's live progress. The book
  * is never an inventory item — it is opened transiently via {@code openBook}.
  * Completed tasks are rendered struck through but still fully visible, so the
  * book doubles as a permanent reference.
  */
 public class BookRenderer {
+
+    private final TheatriaOnboarding plugin;
+
+    public BookRenderer(TheatriaOnboarding plugin) {
+        this.plugin = plugin;
+    }
 
     public Book build(PlayerProgress progress) {
         List<Component> pages = new ArrayList<>();
@@ -28,7 +34,7 @@ public class BookRenderer {
         pages.add(helpPage());
 
         return Book.book(
-                Component.text("Starter Guide"),
+                Component.text("Tutorial Guide"),
                 Component.text("Theatria"),
                 pages
         );
@@ -48,7 +54,7 @@ public class BookRenderer {
                 .append(Component.newline()).append(Component.newline())
                 .append(Component.text("Reopen anytime:", NamedTextColor.BLACK))
                 .append(Component.newline())
-                .append(Component.text("/starter", NamedTextColor.DARK_AQUA))
+                .append(Component.text("/tutorial", NamedTextColor.DARK_AQUA))
                 .append(Component.newline()).append(Component.newline())
                 .append(Component.text("Progress: ", NamedTextColor.DARK_GRAY))
                 .append(Component.text(progress.completedCount() + " / " + TaskId.count(),
@@ -70,9 +76,26 @@ public class BookRenderer {
         builder.append(Component.newline()).append(Component.newline());
 
         for (String text : task.body()) {
+            if (task == TaskId.DAILY) {
+                text = text.replace("{min}", String.valueOf(dailyRewardMinutes()));
+            }
             builder.append(line(text, done)).append(Component.newline());
         }
         return builder.build();
+    }
+
+    /**
+     * The daily-reward playtime requirement, in whole minutes, shown on the DAILY
+     * page. Reads TheatriaSessions' live threshold when available so the book never
+     * drifts from the real value; otherwise falls back to the {@code daily-minutes}
+     * config (used by the playtime-statistic fallback when Sessions is absent).
+     */
+    private int dailyRewardMinutes() {
+        int fromSessions = plugin.sessionsHook().thresholdMinutes();
+        if (fromSessions > 0) {
+            return fromSessions;
+        }
+        return plugin.getConfig().getInt("daily-minutes", 30);
     }
 
     /** A body line: normal when pending, gray + struck through when complete. */

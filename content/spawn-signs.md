@@ -2,8 +2,8 @@
 
 Replacement copy for the spawn signs. A Minecraft sign is **4 lines, ~15
 characters/line**, so signs only do the bare minimum: welcome the player, send
-them to `/starter`, and funnel them through the portal. Everything else lives in
-the Starter Guide book.
+them to `/tutorial`, and funnel them through the portal. Everything else lives in
+the Tutorial Guide book.
 
 > If a hologram plugin is available, a single hologram can replace signs 1–2 and
 > hold more text comfortably. Signs are the fallback.
@@ -22,7 +22,7 @@ the Starter Guide book.
 ```
     STEP 1
     Type:
-   /starter
+   /tutorial
  opens your guide
 ```
 
@@ -37,15 +37,19 @@ the Starter Guide book.
 ### Sign 4 — Daily reward teaser
 ```
      TIP
-  Play 30 min
- = daily reward
-   free money!
+  Play daily for
+  a free reward!
+   See /tutorial
 ```
+> Signs are static, so don't hardcode a minute count here (it would drift from the
+> Sessions threshold). Point at `/tutorial`, whose book shows the live requirement.
+> If you do want a number on the sign, set it to TheatriaSessions' real threshold
+> (active, non-AFK minutes) and keep it in sync by hand.
 
 ### Sign 5 — Help (optional)
 ```
     STUCK?
    Ask in chat
   or reread the
- guide: /starter
+ guide: /tutorial
 ```

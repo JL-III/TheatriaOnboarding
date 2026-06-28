@@ -23,16 +23,90 @@
              ==================================================================== -->
         <paper.version>26.1.2.build.69-stable</paper.version>
         <java.version>25</java.version>
+
+        <!-- Lands API — for the typed LandsHook poll and the LandPostCreateEvent
+             listener. Published as com.incredibleplugins:lands-api on Lands' own
+             Maven repo (see <repositories>). Set this to match YOUR server's Lands
+             version (https://wiki.incredibleplugins.com). -->
+        <lands.version>7.25.14</lands.version>
     </properties>
 
+    <!-- ====================================================================
+         Repository ordering & scoping. Maven has no per-groupId repo filter
+         (that's a Gradle-only feature), so "only check JitPack for Vault" is
+         achieved two ways here:
+
+           1. ORDER — Maven walks repos top-to-bottom and stops at the first
+              that has the artifact. Maven Central is declared FIRST and JitPack
+              LAST, so every dependency that lives in Central or a plugin repo
+              resolves before JitPack is ever consulted. JitPack ends up queried
+              only for VaultAPI (the one artifact that genuinely lives nowhere
+              else).
+           2. release/snapshot SCOPING — each repo enables only the kind of
+              version it actually serves. Crucially, JitPack has snapshots
+              DISABLED, so Maven no longer asks it for the EssentialsX
+              *-SNAPSHOT metadata — that lookup was the source of the JitPack
+              401 noise that slowed every build.
+         ==================================================================== -->
     <repositories>
+        <!-- Maven Central first: LuckPerms api (and any future common dep)
+             resolves here immediately and never touches the repos below. -->
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <!-- Paper API. The 26.1+ "{ver}.build.N-stable" coords are releases;
+             keep snapshots on so an older -R0.1-SNAPSHOT bump still resolves. -->
         <repository>
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
+        <!-- EssentialsX: snapshots-only repo, serves 2.21.0-SNAPSHOT. Releases
+             disabled so Maven won't probe it for release artifacts. -->
+        <repository>
+            <id>essentialsx</id>
+            <url>https://repo.essentialsx.net/snapshots/</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <!-- Lands API: releases repo, serves lands-api 7.25.x. -->
+        <repository>
+            <id>incredibleplugins</id>
+            <url>https://repo.incredibleplugins.com/repository/releases/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <!-- First-party TheatriaSessions artifact (the SessionsAPI), released
+             versions only (v1.0.0-alpha.6, …). GitHub Packages requires
+             authentication even to download, so add a matching <server> to your
+             ~/.m2/settings.xml whose <id> equals this repo's id (github):
+
+               <server>
+                 <id>github</id>
+                 <username>YOUR_GITHUB_USERNAME</username>
+                 <password>A_GITHUB_TOKEN_WITH_read:packages</password>
+               </server>
+
+             In CI, set username to ${env.GITHUB_ACTOR} and password to a token. -->
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/JL-III/TheatriaSessions</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <!-- JitPack LAST, and only for VaultAPI. Snapshots disabled so it is
+             never consulted for the EssentialsX *-SNAPSHOT metadata (the old
+             source of per-build 401 noise); by ordering, it's reached only for
+             the one release artifact — VaultAPI — that lives nowhere else. -->
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
         </repository>
     </repositories>
 
@@ -51,6 +125,57 @@
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- First-party: the DAILY task reads TheatriaSessions' public SessionsAPI.
+             'provided' = compiled against, supplied by the TheatriaSessions plugin at
+             runtime (not bundled). Still a soft dependency: SessionsHook guards every
+             use behind a plugin-presence check and falls back to the playtime
+             statistic when TheatriaSessions is absent. -->
+        <dependency>
+            <groupId>com.playtheatria</groupId>
+            <artifactId>theatriasessions</artifactId>
+            <version>v1.0.0-alpha.6</version>
+        </dependency>
+
+        <!-- EssentialsX API (third-party, published to repo.essentialsx.net).
+             'provided': supplied by the Essentials plugin at runtime; used only by
+             EssentialsHook (cast guarded by a presence check). Excludes the transitive
+             Spigot API so the Paper API wins on the compile classpath (matches how
+             TheatriaSessions depends on it). Bump the version to match your server. -->
+        <dependency>
+            <groupId>net.essentialsx</groupId>
+            <artifactId>EssentialsX</artifactId>
+            <version>2.21.0-SNAPSHOT</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>spigot-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- LuckPerms API (third-party, published to Maven Central). 'provided':
+             supplied by the LuckPerms plugin at runtime. Used only by LuckPermsHook,
+             whose types are touched only after a plugin-presence check, so they never
+             resolve when LuckPerms is absent. -->
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.4</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Lands API (third-party, published to repo.incredibleplugins.com).
+             'provided': supplied by the Lands plugin at runtime. Used by LandsHook
+             and LandsCreateListener, both guarded so the Lands classes never resolve
+             when Lands is absent — keeping Lands a soft dependency. -->
+        <dependency>
+            <groupId>com.incredibleplugins</groupId>
+            <artifactId>lands-api</artifactId>
+            <version>${lands.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

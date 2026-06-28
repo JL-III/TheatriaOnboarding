@@ -15,7 +15,7 @@ them invested before they have a chance to bounce.
 3. **Bounded goals, never open-ended.** "Go make money" is replaced with "earn
    $X by doing Y." A new player should always know *exactly* what done looks
    like.
-4. **Don't rely on signs alone.** Most players skim signs. The Starter Guide
+4. **Don't rely on signs alone.** Most players skim signs. The Tutorial Guide
    book is the source of truth; signs and the portal just funnel players into
    it.
 
@@ -24,10 +24,10 @@ them invested before they have a chance to bounce.
 ### Stage 0 — First join (spawn)
 
 - Player spawns into the **welcome area** (signs / hologram).
-- The Starter Guide book is **auto-given on first join** *and* reopenable any
-  time with `/starter`. (Belt and suspenders — signs point to `/starter` for
+- The Tutorial Guide book is **auto-given on first join** *and* reopenable any
+  time with `/tutorial`. (Belt and suspenders — signs point to `/tutorial` for
   anyone who closed it.)
-- Signs do three things only: welcome, "type `/starter`", and "walk through the
+- Signs do three things only: welcome, "type `/tutorial`", and "walk through the
   portal." Everything else lives in the book.
 
 ### Stage 1 — Explore: find your spot (`/rtp`)
@@ -44,23 +44,25 @@ them invested before they have a chance to bounce.
 - Once they like a spot: `/sethome`, and learn `/home` to return.
 - Instant, satisfying, and it anchors them to a place they now feel is "theirs."
 
-### Stage 3 — Earn: your first money (`/kit starter` → `/worth` → `/sell hand`)
+### Stage 3 — Earn: your first money (`/kit welcome` → `/worth` → `/sell hand`)
 
 This is the make-or-break step (see Friction analysis below). Structured as:
 
-1. **Get tools:** `/kit starter` (or however we hand out starter gear).
+1. **Get tools:** `/kit welcome` (or however we hand out welcome gear).
 2. **First quick win:** mine/chop a few blocks, then `/sell hand` immediately so
    the money loop *clicks* in under a minute.
 3. **Learn to value items:** `/worth` while holding something.
 4. **Hit a concrete target:** *"Earn $1,000 — the cost of your first claim.
    Mine and sell cobblestone, coal, and copper."*
 
-### Stage 4 — Protect: claim your land (`/claim`)
+### Stage 4 — Protect: claim your land (`/lands create`)
 
-- Claims run on the **Lands** plugin. A brand-new player just types `/claim` —
-  the first `/claim` auto-creates their land and claims the chunk they're
-  standing in. `/lands create <name>` exists but is optional; we deliberately
-  teach only `/claim` to keep it simple.
+- Claims run on the **Lands** plugin. We teach **`/lands create`**: it's the more
+  intuitive command (it claims the chunk you're standing in — no name argument
+  needed), and unlike `/claim` it still works when the player is already a member
+  of another land — so a friend trusting them in first can't strand them on this step.
+  (A bare `/claim` auto-creates a first land too, but fails once you belong to any
+  land.) Detection is unchanged either way: the Lands API reports land membership.
 - **First-claim cost = land-creation price.** Recommended: set Lands'
   land-creation price to **$1,000** (pulled from EssentialsX via Vault). That
   makes the first claim a $1,000 goal — the single biggest friction reducer
@@ -98,8 +100,8 @@ The earning step is also the *most important* thing onboarding can teach,
 because the economy is Theatria's core loop. So we don't cut it — we **convert
 it from an open-ended grind into a bounded, guided quest:**
 
-1. **Give a starter kit.** A fresh player with no pickaxe/sword can't earn.
-   `/kit starter` (basic tools + food) removes the cold-start wall.
+1. **Give a welcome kit.** A fresh player with no pickaxe/sword can't earn.
+   `/kit welcome` (basic tools + food) removes the cold-start wall.
 2. **One immediate sale.** Have them `/sell hand` on their very first gathered
    stack so they see money arrive *before* the grind. Momentum beats
    instruction.
@@ -110,13 +112,13 @@ it from an open-ended grind into a bounded, guided quest:**
 4. **Set a concrete dollar target** equal to (or just above) the first claim
    cost, so "done" is unambiguous.
 5. **Keep the first claim cheap.** Set the Lands land-creation price to
-   **$1,000** so the first `/claim` is a $1,000 goal, not a grind. Mining and
+   **$1,000** so the first `/lands create` is a $1,000 goal, not a grind. Mining and
    selling cobblestone/coal/copper should clear that in one short session, and
    the **daily reward** can cover a big chunk of it — turning the first claim
    into a near-finish rather than a wall. (Later chunk claims can cost more;
    onboarding only needs the first one.)
 
-**Verdict:** Keep the step. With a starter kit + one quick win + a single named
+**Verdict:** Keep the step. With a welcome kit + one quick win + a single named
 method (mine & sell cobblestone/coal/copper) + a low $1,000 first-claim target
 backstopped by the daily reward, it's the *right* amount of friction — it
 teaches the economy without losing people. Left open-ended, it's where your
@@ -128,20 +130,21 @@ funnel leaks.
 
 These change the copy and the flow, so flagging them explicitly:
 
-1. ~~**Claim mechanic.**~~ ✅ Confirmed: **Lands** `/claim`. First `/claim`
-   auto-creates the land (no `/lands create` needed); recommended first-claim
-   cost **$1,000** (land-creation price, from EssentialsX via Vault).
+1. ~~**Claim mechanic.**~~ ✅ Confirmed: **Lands** `/lands create` (taught over
+   `/claim` — more intuitive and works even when already in another land);
+   recommended first-claim cost **$1,000** (land-creation price, from EssentialsX
+   via Vault).
 2. ~~**Money method.**~~ ✅ Confirmed: mine & sell cobblestone, coal, copper.
 3. **Set the price.** Confirm the Lands land-creation price is actually set to
    $1,000 in config, so the book's "$1,000" matches reality.
-4. **Plugin stack.** Confirmed: Lands (`/claim`) + EssentialsX (`/sethome`,
+4. **Plugin stack.** Confirmed: Lands (`/lands create`) + EssentialsX (`/sethome`,
    `/home`, `/worth`, `/sell hand`, `/kit`, economy). Still to confirm: the RTP
    plugin (`/rtp`) and the rank-ladder plugin (`/rank up`). Knowing the exact
    plugins lets me write real config (book NBT/JSON, sign data, kit defs).
-5. **Values to fill in:** starter kit name + contents, rank-up cost, and the
+5. **Values to fill in:** welcome kit name + contents, rank-up cost, and the
    daily-reward amount.
 6. **Book delivery:** OK to auto-give the book on first join in addition to
-   `/starter`? (Strongly recommended.)
+   `/tutorial`? (Strongly recommended.)
 7. **Deliverable format:** do you want (a) this design + copy, (b) actual
    implementable server files (book NBT/JSON, sign text, kit/permission config),
    or (c) both? That decides what I build next.

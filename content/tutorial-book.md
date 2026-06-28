@@ -1,4 +1,4 @@
-# Starter Guide — `/starter` book
+# Tutorial Guide — `/tutorial` book
 
 Page-by-page copy for the virtual book. Kept short on purpose: a Minecraft
 written book fits ~14 lines / ~256 characters per page, so each task is its own
@@ -16,7 +16,7 @@ in order — they only
 take a few minutes.
 
 Reopen it anytime:
-   /starter
+   /tutorial
 
 Turn the page  >>
 ```
@@ -35,7 +35,7 @@ Not satisfied? Use
 /rtp until you find
 a spot you like,
 then continue your
-/starter tasks.
+/tutorial tasks.
 ```
 
 **Page 3 — Task 2: Set your home**
@@ -58,7 +58,7 @@ TASK 3
 First money
 
 Grab gear:
-   /kit starter
+   /kit welcome
 
 Mine stone or chop
 wood. Hold an item
@@ -88,7 +88,7 @@ Claim your land
 
 Stand where you want
 to build:
-   /claim
+   /lands create
 
 Costs $1,000 and
 creates your land.
@@ -113,10 +113,15 @@ more perks.
 ```
 BONUS
 
-Play ~30 min to grab
+Play ~{min} min to grab
 your DAILY REWARD —
 easy money to start.
 
 Stuck? Just ask in
 chat. Have fun!
 ```
+
+> `{min}` is filled in live by the renderer from TheatriaSessions' real reward
+> threshold (active, non-AFK minutes), so the book never promises a number that
+> drifts from config. When TheatriaSessions is absent it shows `daily-minutes`.
+> Note: Sessions counts **active** time — AFK minutes don't count toward it.

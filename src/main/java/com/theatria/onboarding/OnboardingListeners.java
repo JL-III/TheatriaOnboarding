@@ -1,5 +1,10 @@
 package com.theatria.onboarding;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,7 +47,11 @@ public class OnboardingListeners implements Listener {
         plugin.progress().markSeen(player);
         plugin.progress().recheck(player);
 
-        if (first && plugin.getConfig().getBoolean("auto-open-first-join", true)) {
+        // Don't auto-open for players without the onboarding permission — e.g. alts,
+        // which servers exclude by removing this node (the same way Sessions excludes
+        // them via theatria.sessions.allow). They also can't open it manually.
+        if (first && plugin.getConfig().getBoolean("auto-open-first-join", true)
+                && player.hasPermission("theatria.onboarding.use")) {
             // Slight delay so the client is ready to receive the book.
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 if (player.isOnline()) {
@@ -50,6 +59,34 @@ public class OnboardingListeners implements Listener {
                 }
             }, 40L);
         }
+
+        // Clickable reminder to open the guide — shown on each join (after the MOTD)
+        // until the player finishes onboarding. Gated on the permission (so alts get
+        // nothing) and toggleable via config.
+        if (plugin.getConfig().getBoolean("join-reminder", true)
+                && player.hasPermission("theatria.onboarding.use")
+                && !plugin.progress().get(player.getUniqueId()).allComplete()) {
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+                if (player.isOnline()
+                        && !plugin.progress().get(player.getUniqueId()).allComplete()) {
+                    player.sendMessage(tutorialReminder());
+                }
+            }, 60L);
+        }
+    }
+
+    /** A clickable one-line nudge to open the Tutorial Guide (runs /tutorial on click). */
+    private Component tutorialReminder() {
+        return Component.text()
+                .append(Component.text("» ", NamedTextColor.DARK_GREEN))
+                .append(Component.text("New to Theatria? Open your ", NamedTextColor.YELLOW))
+                .append(Component.text("Tutorial Guide", NamedTextColor.GOLD, TextDecoration.BOLD))
+                .append(Component.text(": ", NamedTextColor.YELLOW))
+                .append(Component.text("/tutorial", NamedTextColor.AQUA, TextDecoration.BOLD))
+                .hoverEvent(HoverEvent.showText(
+                        Component.text("Click to open your Tutorial Guide", NamedTextColor.YELLOW)))
+                .clickEvent(ClickEvent.runCommand("/tutorial"))
+                .build();
     }
 
     @EventHandler
@@ -74,7 +111,7 @@ public class OnboardingListeners implements Listener {
                 || !from.getWorld().equals(to.getWorld())
                 || from.distanceSquared(to) >= minDistance * minDistance;
         if (leftSpawn) {
-            plugin.progress().complete(player, TaskId.RTP);
+            plugin.progress().complete(player, TaskId.RTP, "teleport");
         }
     }
 
@@ -104,8 +141,8 @@ public class OnboardingListeners implements Listener {
         }
         if (!plugin.landsHook().isAvailable()
                 && plugin.progress().isComplete(player.getUniqueId(), TaskId.EARN)) {
-            // Without the Lands hook, only credit /claim once they've hit the money
-            // target — a bare /claim without funds would otherwise false-complete it.
+            // Without the Lands hook, only credit /lands create once they've hit the
+            // money target — a land command without funds would otherwise false-complete it.
             check(player, message, "commands.claim", TaskId.CLAIM);
         }
 
@@ -131,7 +168,7 @@ public class OnboardingListeners implements Listener {
             if (message.equals(alias) || message.startsWith(alias + " ")) {
                 // Run next tick so the underlying command resolves first.
                 plugin.getServer().getScheduler().runTask(plugin,
-                        () -> plugin.progress().complete(player, task));
+                        () -> plugin.progress().complete(player, task, "command"));
                 return;
             }
         }

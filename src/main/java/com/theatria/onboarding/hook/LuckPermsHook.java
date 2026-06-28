@@ -1,31 +1,34 @@
 package com.theatria.onboarding.hook;
 
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.model.user.UserManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.lang.reflect.Method;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
- * Reflective hook into LuckPerms used to retroactively detect rank-ups: if a
- * player's primary group is something other than a configured starting rank,
- * they have already ranked up at least once. This complements {@link RankupHook}
- * (which only catches live rank-up events) by catching ranks gained while
- * offline or before this plugin was installed — checked on join via
- * {@code ProgressManager#recheck}.
+ * Hook into LuckPerms used to retroactively detect rank-ups: if a player's primary
+ * group is something other than a configured starting rank, they have already
+ * ranked up at least once. This complements {@link RankupHook} (which only catches
+ * live rank-up events) by catching ranks gained while offline or before this plugin
+ * was installed — checked on join via {@code ProgressManager#recheck}.
  *
- * <p>Disabled unless {@code rankup-starting-groups} is configured, so it can't
- * misfire on a server whose starting rank isn't "default".
+ * <p>Uses the published LuckPerms API directly (Maven Central, no reflection). It
+ * stays a <em>soft</em> dependency: the LuckPerms types are only touched once the
+ * plugin-presence check passes, so they never resolve when LuckPerms is absent.
+ * Disabled unless {@code rankup-starting-groups} is configured, so it can't misfire
+ * on a server whose starting rank isn't "default".
  */
 public final class LuckPermsHook {
 
     private final Plugin plugin;
     private final Logger logger;
-    private Object userManager;
-    private Method getUser;
+    private UserManager userManager; // null until/unless bound
     private boolean bound;
     private boolean warned;
 
@@ -33,16 +36,11 @@ public final class LuckPermsHook {
         this.plugin = plugin;
         this.logger = logger;
         if (Bukkit.getPluginManager().getPlugin("LuckPerms") == null) {
-            return;
+            return; // LuckPerms types below are never reached when it's absent
         }
         try {
-            Object api = Class.forName("net.luckperms.api.LuckPermsProvider")
-                    .getMethod("get").invoke(null);
-            Method getUserManager = api.getClass().getMethod("getUserManager");
-            getUserManager.setAccessible(true);
-            this.userManager = getUserManager.invoke(api);
-            this.getUser = userManager.getClass().getMethod("getUser", UUID.class);
-            this.getUser.setAccessible(true);
+            LuckPerms api = LuckPermsProvider.get();
+            this.userManager = api.getUserManager();
             this.bound = true;
         } catch (Throwable t) {
             logger.warning("LuckPerms present but API hook failed to bind; "
@@ -68,16 +66,11 @@ public final class LuckPermsHook {
             return false;
         }
         try {
-            Object user = getUser.invoke(userManager, player.getUniqueId());
+            User user = userManager.getUser(player.getUniqueId());
             if (user == null) {
                 return false;
             }
-            Method getPrimaryGroup = user.getClass().getMethod("getPrimaryGroup");
-            getPrimaryGroup.setAccessible(true);
-            Object group = getPrimaryGroup.invoke(user);
-            if (!(group instanceof String name)) {
-                return false;
-            }
+            String name = user.getPrimaryGroup();
             for (String start : starting) {
                 if (start.equalsIgnoreCase(name)) {
                     return false;

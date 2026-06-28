@@ -2,8 +2,8 @@
 
 A redesign of the new-player onboarding experience for the Theatria Minecraft
 server. Today onboarding is just oak signs at spawn; this project replaces that
-with a guided, task-based flow built around a **virtual Starter Guide book** —
-opened with `/starter`, re-rendered from each player's live progress, with
+with a guided, task-based flow built around a **virtual Tutorial Guide book** —
+opened with `/tutorial`, re-rendered from each player's live progress, with
 completed tasks struck through but still shown for reference. Delivered as a
 small custom **Paper plugin**.
 
@@ -17,21 +17,21 @@ New players learn Theatria's actual gameplay loop, one step at a time:
 |------|-------------|-----------|
 | 1. Explore | Find a spot you like | `/rtp` |
 | 2. Settle | Make it your home | `/sethome`, `/home` |
-| 3. Earn | Gather & sell to build a balance | `/kit starter`, `/worth`, `/sell hand` |
-| 4. Protect | Claim your land | `/claim` |
+| 3. Earn | Gather & sell to build a balance | `/kit welcome`, `/worth`, `/sell hand` |
+| 4. Protect | Claim your land | `/lands create` |
 | 5. Progress | Rank up for perks | `/rank up` |
 | Bonus | Daily reward for playtime | play ~30 min |
 
 ## What's here
 
 - **The plugin** — `pom.xml` + `src/main/…`: a Paper plugin that serves the
-  dynamic `/starter` book and tracks per-player progress.
+  dynamic `/tutorial` book and tracks per-player progress.
 - [`docs/onboarding-design.md`](docs/onboarding-design.md) — the full flow,
   design principles, the friction analysis, and open questions.
 - [`docs/plugin-architecture.md`](docs/plugin-architecture.md) — how the dynamic
   virtual book works: task model, progress detection, persistence, rendering.
-- [`content/starter-book.md`](content/starter-book.md) — page-by-page text for
-  the `/starter` virtual book.
+- [`content/tutorial-book.md`](content/tutorial-book.md) — page-by-page text for
+  the `/tutorial` virtual book.
 - [`content/spawn-signs.md`](content/spawn-signs.md) — replacement text for the
   spawn signs / portal area.
 
@@ -51,19 +51,26 @@ Run `make help` to list targets (`build`, `clean`, `help`).
 > latest stable build for 26.1.2 if that one has been pruned.
 
 > The build pulls `paper-api` and `VaultAPI` from the PaperMC and JitPack Maven
-> repos, so it needs network access to those. **Two settings in `pom.xml` are
-> marked for adjustment** — `paper.version` (the server reported `26.1.2`) and
-> `java.version` (defaulted to 21). If Maven can't resolve `paper-api`, run
-> `/version` on the server and use that version's `-R0.1-SNAPSHOT` artifact.
-> Likewise, set `api-version` in `plugin.yml` to a value the server accepts.
+> repos, so it needs network access to those.
+
+> It also pulls `com.playtheatria:theatriasessions` (the SessionsAPI, for the DAILY
+> task) from **GitHub Packages**, which requires authentication even to read. Add a
+> `github-theatriasessions` server (your GitHub username + a `read:packages` token)
+> to `~/.m2/settings.xml` — see the comment in `pom.xml` — and bump
+> `theatriasessions.version` to the latest TheatriaSessions has published.
 
 ## In-game
 
-- `/starter` (alias `/guide`) — open the virtual Starter Guide.
-- `/starter reset [player]` — reset progress (needs `theatria.onboarding.admin`).
+- `/tutorial` (alias `/guide`) — open the virtual Tutorial Guide.
+- A clickable "open your Tutorial Guide" reminder is sent on join until onboarding
+  is finished (toggle `join-reminder` in `config.yml`; skipped for alts).
+- `/tutorial reset [player]` — reset progress (needs `theatria.onboarding.admin`).
+- `/tutorial debug [player]` — runtime snapshot (admin): per-task state, available
+  hooks, and the Sessions view of DAILY. Set `debug: true` in `config.yml` for
+  per-recheck DAILY logging.
 - The book auto-opens on a player's first ever join (toggle in `config.yml`).
-- Task-completion chat messages are clickable (hover: "Click to view your starter
-  tasks") and run `/starter` when clicked.
+- Task-completion chat messages are clickable (hover: "Click to view your tutorial
+  tasks") and run `/tutorial` when clicked.
 
 ## Status
 
@@ -72,15 +79,18 @@ and commands are implemented. Detection uses real state/events where it matters:
 **SETHOME via the Essentials API** (player actually has a home), **CLAIM via the
 Lands API** (player actually owns a claim), and **RANKUP via the Rankup
 `PlayerRankupEvent`** (a live rank-up) plus a **LuckPerms** join-time check for
-ranks gained while offline, with `RTP` completing when the spawn portal sends
-them into the wild. Confirmed mechanics are wired in: Lands `/claim` (first claim
-auto-creates the land, $1,000 target from EssentialsX via Vault), and the
-mine-&-sell cobblestone/coal/copper method. The Essentials/Lands/Rankup/LuckPerms
-hooks are reflective, so the build needs no extra dependencies and degrades to
-command detection if a hook can't bind.
+ranks gained while offline, and **DAILY via the TheatriaSessions API** (the player
+has actually earned today's reward), with `RTP` completing when the spawn portal
+sends them into the wild. Confirmed mechanics are wired in: Lands `/lands create`
+(creates the land, $1,000 target from EssentialsX via Vault), and the
+mine-&-sell cobblestone/coal/copper method. The Essentials/Lands/LuckPerms hooks
+(and DAILY's TheatriaSessions hook) use those plugins' published APIs directly as
+`provided` dependencies; only the Rankup hook stays reflective (Rankup3 ships no
+Maven artifact). All are soft dependencies and degrade to command/statistic
+detection if the plugin is absent.
 
 **Build:** targets Paper 26.1.2 (`paper-api` `26.1.2.build.69-stable`) on JDK 25.
 The dev sandbox can't compile it (PaperMC repo is firewalled there), so build on
 a machine with repo access and JDK 25. **Pending values** to set when convenient:
-starter kit contents, rank-up cost, daily-reward amount, and
+welcome kit contents, rank-up cost, daily-reward amount, and
 `rankup-starting-groups` (your first rank group). See the design doc.

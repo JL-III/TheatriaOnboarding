@@ -120,11 +120,22 @@ public class ProgressManager {
 
     /** Completes a task (idempotent) and notifies the player when newly done. */
     public void complete(Player player, TaskId task) {
+        complete(player, task, "auto");
+    }
+
+    /**
+     * Completes a task (idempotent). When the task newly completes, logs the detection
+     * {@code source} at INFO (an always-on audit of what completed and via which path)
+     * and notifies the player.
+     */
+    public void complete(Player player, TaskId task, String source) {
         PlayerProgress progress = get(player.getUniqueId());
         if (!progress.complete(task, System.currentTimeMillis())) {
             return;
         }
         save(player.getUniqueId());
+        plugin.getLogger().info("[onboarding] " + player.getName() + " completed "
+                + task.name() + " (via " + source + ")");
         notifyComplete(player, task, progress);
     }
 
@@ -136,17 +147,17 @@ public class ProgressManager {
                     "You've finished onboarding — welcome to Theatria!", NamedTextColor.GOLD)));
         } else {
             player.sendMessage(openGuide(Component.text(
-                    "Open /starter to see what's next.", NamedTextColor.GRAY)));
+                    "Open /tutorial to see what's next.", NamedTextColor.GRAY)));
         }
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.7f, 1.4f);
     }
 
-    /** Adds a "click to view starter tasks" hover + click-to-run-/starter action. */
+    /** Adds a "click to view tutorial tasks" hover + click-to-run-/tutorial action. */
     private Component openGuide(Component base) {
         return base
-                .hoverEvent(HoverEvent.showText(Component.text("Click to view your starter tasks",
+                .hoverEvent(HoverEvent.showText(Component.text("Click to view your tutorial tasks",
                         NamedTextColor.YELLOW)))
-                .clickEvent(ClickEvent.runCommand("/starter"));
+                .clickEvent(ClickEvent.runCommand("/tutorial"));
     }
 
     /**
@@ -161,27 +172,37 @@ public class ProgressManager {
         if (!isComplete(uuid, TaskId.EARN) && plugin.economy() != null) {
             double target = plugin.getConfig().getDouble("earn-target", 1000.0);
             if (plugin.economy().getBalance(player) >= target) {
-                complete(player, TaskId.EARN);
+                complete(player, TaskId.EARN, "Vault balance");
             }
         }
 
         if (!isComplete(uuid, TaskId.DAILY)) {
-            int minutes = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (20 * 60);
-            if (minutes >= plugin.getConfig().getInt("daily-minutes", 30)) {
-                complete(player, TaskId.DAILY);
+            if (plugin.sessionsHook().isAvailable()) {
+                // TheatriaSessions is the source of truth: it only reports earned after
+                // active (non-AFK) playtime crosses the configured threshold. We trust it
+                // and do NOT fall back to the statistic here, so idle time can't complete it.
+                if (plugin.sessionsHook().hasEarnedReward(player)) {
+                    complete(player, TaskId.DAILY, "SessionsAPI");
+                }
+            } else {
+                // Fallback when TheatriaSessions is absent: approximate from vanilla playtime.
+                int minutes = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / (20 * 60);
+                if (minutes >= plugin.getConfig().getInt("daily-minutes", 30)) {
+                    complete(player, TaskId.DAILY, "playtime statistic");
+                }
             }
         }
 
         if (!isComplete(uuid, TaskId.SETHOME)
                 && plugin.essentialsHook().isAvailable()
                 && plugin.essentialsHook().hasHome(player)) {
-            complete(player, TaskId.SETHOME);
+            complete(player, TaskId.SETHOME, "Essentials home");
         }
 
         if (!isComplete(uuid, TaskId.CLAIM)
                 && plugin.landsHook().isAvailable()
                 && plugin.landsHook().hasClaim(player)) {
-            complete(player, TaskId.CLAIM);
+            complete(player, TaskId.CLAIM, "Lands claim");
         }
 
         // Retroactive rank-up detection (e.g. ranked up while offline). Live
@@ -189,7 +210,7 @@ public class ProgressManager {
         if (!isComplete(uuid, TaskId.RANKUP)
                 && plugin.luckPermsHook().isAvailable()
                 && plugin.luckPermsHook().hasRankedUp(player)) {
-            complete(player, TaskId.RANKUP);
+            complete(player, TaskId.RANKUP, "LuckPerms join-check");
         }
     }
 }
